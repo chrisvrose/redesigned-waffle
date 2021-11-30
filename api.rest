@@ -1,0 +1,15 @@
+### test
+GET http://localhost:8080/up
+###
+GET http://localhost:8080/subject
+###
+GET http://localhost:8080/subject/1
+###
+POST http://localhost:8080/subject
+Content-Type: application/json
+
+{
+    "id":1,
+    "name":23,
+    "courseCode":"pain"
+}
