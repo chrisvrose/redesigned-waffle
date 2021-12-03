@@ -1,7 +1,8 @@
 create table if not EXISTS userauth (
     uid serial primary key,
-    name varchar(32) not null,
-    pwd varchar(64) not null,
+    email varchar(64) unique not null ,
+    "name" varchar(32) not null,
+    pwd varchar(512) not null,
     "semester" int not null,
     "dept" char(32) not null
 );

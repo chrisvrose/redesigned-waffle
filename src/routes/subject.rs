@@ -3,7 +3,7 @@ use sqlx::{Pool,Postgres};
 use crate::models::Subject;
 use serde_json::value::Value;
 
-#[get("/")]
+#[get("")]
 pub async fn get_all_subs(dbpool:web::Data<Pool<Postgres>>) -> impl Responder {
     // let mut x = HttpResponse::Ok();
     let vals = Subject::get_all(dbpool.get_ref()).await;
@@ -14,7 +14,7 @@ pub async fn get_all_subs(dbpool:web::Data<Pool<Postgres>>) -> impl Responder {
     
 }
 
-#[post("/")]
+#[post("")]
 pub async fn add_sub(data:web::Json<Subject>,dbpool:web::Data<Pool<Postgres>>)->impl Responder{
     let data = data.into_inner();
     let response = Subject::insert(&data, &dbpool).await;
