@@ -3,11 +3,13 @@ use actix_web::web::ServiceConfig;
 mod subject;
 mod up;
 mod userauth;
+mod dept;
 
 /// Function that adds the routes
 pub fn init(serviceConfig: &mut ServiceConfig) {
     // add the up route
-    serviceConfig.service(actix_web::web::scope("/up").service(up::up))
+    serviceConfig
+        .service(actix_web::web::scope("/up").service(up::up))
         // add the subject routes
         .service(
             actix_web::web::scope("/subject")
@@ -19,5 +21,8 @@ pub fn init(serviceConfig: &mut ServiceConfig) {
             actix_web::web::scope("/user")
                 .service(userauth::get_all)
                 .service(userauth::add_user),
+        )
+        .service(
+            actix_web::web::scope("/dept").service(dept::get_all)
         );
 }

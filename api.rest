@@ -28,3 +28,6 @@ Content-Type: application/json
     "semester":7,
     "dept":"CSE"
 }
+
+###
+GET http://localhost:8080/dept
