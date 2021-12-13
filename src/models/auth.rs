@@ -9,15 +9,23 @@ pub struct UserAuthCredsDTO{
 }
 
 impl UserAuth{
-    pub async fn login(x:&UserAuthCredsDTO,dbpool:&PgPool)->Result<bool,sqlx::Error>{
-        let resultrow = query_as!(UserAuthCredsDTO,"SELECT email,pwd from userauth where email=$1::text",x.email).fetch_optional(dbpool).await?;
-        let res = if let Some(dbcredential)=resultrow {
-            let mut verifier = argonautica::Verifier::default();
-            let isValid = verifier.with_hash(&(dbcredential.pwd)).with_password(&(x.pwd)).verify().unwrap_or(false);
-            isValid
-        }else{
-            false
-        };
-        Ok(res)
+    pub async fn login(x:&UserAuthCredsDTO,dbpool:&PgPool)->bool{
+        let resultrow = query_as!(UserAuthCredsDTO,"SELECT email,pwd from userauth where email=$1::text",x.email).fetch_optional(dbpool).await.unwrap_or_else(|val|{
+            println!("Error: {:?}",val);
+            None
+        });
+        match resultrow{
+            Some(dbcreds)=>{
+                let mut verifier = argonautica::Verifier::default();
+                let is_valid = verifier.with_hash(&(dbcreds.pwd)).with_password(&(x.pwd)).verify().unwrap_or(false);
+                is_valid
+            },
+            None=>false
+        }
     }
+
+    pub async fn authToken(usercreds:&UserAuthCredsDTO){
+        
+    }
+    
 }

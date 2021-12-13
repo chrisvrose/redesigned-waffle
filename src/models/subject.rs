@@ -5,7 +5,8 @@ pub struct Subject {
     pub coursecode: String,
     pub name: String,
     pub semester:i32,
-    pub dept:String,
+    pub isglobal:bool,
+    pub deptid:String,
     pub maxcapacity:i32
 }
 
@@ -27,11 +28,12 @@ impl Subject {
         let mut tx = db.begin().await?;
         
         let resp = query!(
-            "INSERT INTO subject values($1,$2,$3,$4,$5)",
+            "INSERT INTO subject values($1,$2,$3,$4,$5,$6)",
             data.coursecode,
             data.name,
             data.semester,
-            data.dept,
+            data.isglobal,
+            data.deptid,
             data.maxcapacity
         ).execute(&mut tx).await?;
         // commit 

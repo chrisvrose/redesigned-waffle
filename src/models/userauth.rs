@@ -9,16 +9,17 @@ pub struct NewUserDTO{
     pub email:String,
     pub pwd:String,
     pub semester:i32,
-    pub dept:String
+    pub deptid:String
 }
 
+/// Outfacing user -> Missing pwd
 #[derive(Serialize,Deserialize,Debug,Clone)]
 pub struct OutUserDTO{
     pub uid:i32,
     pub name:String,
     pub email:String,
     pub semester:i32,
-    pub dept:String
+    pub deptid:String
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -28,7 +29,7 @@ pub struct UserAuth {
     pub email:String,
     pub pwd: String,
     pub semester: i32,
-    pub dept: String,
+    pub deptid: String,
 }
 
 impl UserAuth {
@@ -39,7 +40,7 @@ impl UserAuth {
             email:self.email,
             semester:self.semester,
             name:self.name,
-            dept:self.dept
+            deptid:self.deptid
         }
     }
     /// get all bodies
@@ -50,7 +51,7 @@ impl UserAuth {
             .await;
         resp
     }
-
+    /// add a user
     pub async fn add_user(user: &NewUserDTO, db: &PgPool,salt:&String) -> Result<i32, SqlxError> {
         
         let mut hasher = argonautica::Hasher::default();
@@ -58,12 +59,12 @@ impl UserAuth {
         let mut tx = db.begin().await?;
         // let pwdhash = hasher.with
         let response = query!(
-            "INSERT INTO userauth(name,email,pwd,semester,dept) values($1,$2,$3,$4,$5) returning uid",
+            "INSERT INTO userauth(name,email,pwd,semester,deptid) values($1,$2,$3,$4,$5) returning uid",
             user.name,
             user.email,
             "foobar",
             user.semester,
-            user.dept
+            user.deptid
         )
         .fetch_one(&mut tx)
         .await?;
