@@ -27,5 +27,4 @@ Content-Type: application/json
     "pwd":"hello",
     "semester":7,
     "dept":"CSE"
-
 }

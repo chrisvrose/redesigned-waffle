@@ -1,10 +1,11 @@
-use crate::models::{NewUserDTO, UserAuth};
+use crate::{models::{NewUserDTO, UserAuth}, types::AppData};
 use actix_web::{get, post, web::Data, HttpResponse, Responder};
 use sqlx::PgPool;
 
 #[get("")]
-pub async fn get_all(dbpool: Data<PgPool>) -> impl Responder {
-    let resp = UserAuth::get_all(dbpool.as_ref()).await;
+pub async fn get_all(appstate: Data<AppData>) -> impl Responder {
+    let dbpool = &appstate.as_ref().pool;
+    let resp = UserAuth::get_all(dbpool).await;
     match resp {
         Ok(users) => HttpResponse::Ok().json(users),
         Err(_) => HttpResponse::InternalServerError().body(""),
@@ -14,10 +15,12 @@ pub async fn get_all(dbpool: Data<PgPool>) -> impl Responder {
 #[post("")]
 pub async fn add_user(
     user: actix_web::web::Json<NewUserDTO>,
-    dbpool: Data<PgPool>,
-    salt: Data<String>,
+    appdata: Data<AppData>,
+    
 ) -> impl Responder {
-    let resp = UserAuth::add_user(&user, dbpool.as_ref(), salt.as_ref()).await;
+    let dbpool = &appdata.as_ref().pool;
+    let salt = &appdata.as_ref().salt;
+    let resp = UserAuth::add_user(&user, dbpool, salt).await;
     match resp {
         Ok(addedid) => HttpResponse::Ok().json(addedid),
         Err(_) => HttpResponse::InternalServerError().body(""),

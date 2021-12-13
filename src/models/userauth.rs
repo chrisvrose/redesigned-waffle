@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
-use sqlx::{query, query_as, Error as SqlxError, PgPool, Executor};
+use sqlx::{query, query_as, Error as SqlxError, PgPool, };
+
+use crate::types::AppData;
 
 #[derive(Serialize,Deserialize,Debug,Clone)]
 pub struct NewUserDTO{
@@ -41,10 +43,10 @@ impl UserAuth {
         }
     }
     /// get all bodies
-    pub async fn get_all(db: &PgPool) -> Result<Vec<UserAuth>, SqlxError> {
-        // let resp = query_as!(OutUserDTO, "select uid,email,semester,name,dept from userauth")
+    pub async fn get_all(db:&PgPool) -> Result<Vec<UserAuth>, SqlxError> {
+
         let resp = query_as!(UserAuth, "select * from userauth")
-            .fetch_all(db)
+            .fetch_all(db) 
             .await;
         resp
     }

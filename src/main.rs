@@ -2,6 +2,7 @@ use actix_web::{middleware::Logger, web::Data, App, HttpServer};
 use dotenv::dotenv;
 use serde::{Deserialize, Serialize};
 use sqlx::{self, PgPool};
+use types::AppData;
 // use uuid::Uuid;
 // load modules
 mod routes;
@@ -9,12 +10,13 @@ mod models;
 mod types;
 
 const PORT:u16=8080;
-#[derive(Serialize, Deserialize, Debug)]
-struct UserAuth {
-    id: i32,
-    name: String,
-    pwd: String,
-}
+// #[derive(Serialize, Deserialize, Debug)]
+// struct UserAuth {
+//     id: i32,
+//     name: String,
+//     pwd: String,
+// }
+
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -29,8 +31,8 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
-            .app_data(Data::new(pool.clone()))
-            .app_data(Data::new(salt.clone()))
+            .app_data(Data::new(AppData{pool: pool.clone(),salt:salt.clone()}))
+            // .app_data(Data::new(salt.clone()))
             .wrap(Logger::default())
             // add a set of routes
             .configure(crate::routes::init)
