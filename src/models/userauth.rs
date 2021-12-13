@@ -75,10 +75,10 @@ impl UserAuth {
         //get this data type
         let inserteduid = response.uid;
         let updatePwdStatus = query!("update userauth set pwd=$1 where uid=$2",hashed_pwd,inserteduid).execute(&mut tx).await?;
-
         
         
-        let stat= tx.commit().await?;
+        tx.commit().await?;
+        
         
         Ok(inserteduid)
         
