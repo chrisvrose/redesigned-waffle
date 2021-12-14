@@ -2,6 +2,7 @@ use jsonwebtoken::{decode, encode, errors::Error as JWTError, DecodingKey, Valid
 use serde::{Deserialize, Serialize};
 use std::time::{UNIX_EPOCH};
 
+/// parts of the authtoken we are concerned about
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AuthTokenData {
     uid: i32,
@@ -17,6 +18,7 @@ fn add_days_to_epoch(expdays:u8)->u64{
     duration.as_secs()+(expdays as u64)*SECS_IN_DAYS
 }
 
+/// issue a jwt, expiring in the future
 pub fn issue_jwt(key: &String, uid: i32,expdays:u8) -> Result<String, JWTError> {
     let key = key.as_bytes();
     
@@ -31,7 +33,7 @@ pub fn issue_jwt(key: &String, uid: i32,expdays:u8) -> Result<String, JWTError> 
 
     claims
 }
-
+/// validate a jwt and return the uid
 pub fn validate_jwt(key: &String, token: &String) -> Result<AuthTokenData, JWTError> {
     let key = key.as_bytes();
     

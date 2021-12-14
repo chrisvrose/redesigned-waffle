@@ -1,7 +1,7 @@
 use actix_web::HttpResponse;
 use actix_web::{web::Data, Responder,get};
 
-use crate::types::AppData;
+use crate::misc::AppData;
 use crate::models::Dept;
 
 

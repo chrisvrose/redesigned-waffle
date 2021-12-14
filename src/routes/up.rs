@@ -1,5 +1,5 @@
 use actix_web::{get, HttpResponse, Responder};
-use crate::types::JsonResponse;
+use crate::misc::JsonResponse;
 
 
 #[get("")]

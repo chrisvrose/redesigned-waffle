@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use sqlx::{query, query_as, Error as SqlxError, PgPool, };
 
-use crate::types::AppData;
+use crate::misc::AppData;
 
 #[derive(Serialize,Deserialize,Debug,Clone)]
 pub struct NewUserDTO{

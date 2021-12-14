@@ -1,6 +1,6 @@
 use actix_web::{get,post,web::{self, Data}, HttpResponse, Responder};
 
-use crate::{models::Subject, types::AppData};
+use crate::{models::Subject, misc::AppData};
 use serde_json::value::Value;
 
 #[get("")]

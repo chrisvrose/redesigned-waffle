@@ -2,12 +2,12 @@ use actix_web::{middleware::Logger, web::Data, App, HttpServer};
 use dotenv::dotenv;
 use serde::{Deserialize, Serialize};
 use sqlx::{self, PgPool};
-use types::AppData;
+use misc::AppData;
 // use uuid::Uuid;
 // load modules
 mod routes;
 mod models;
-mod types;
+mod misc;
 
 const PORT:u16=8080;
 // #[derive(Serialize, Deserialize, Debug)]

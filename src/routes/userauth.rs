@@ -1,4 +1,4 @@
-use crate::{models::{NewUserDTO, UserAuth}, types::AppData};
+use crate::{models::{NewUserDTO, UserAuth}, misc::AppData};
 use actix_web::{get, post, web::Data, HttpResponse, Responder};
 use sqlx::PgPool;
 
