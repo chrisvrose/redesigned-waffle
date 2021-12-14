@@ -16,3 +16,6 @@ sqlx = { version = "0.5.9", features = ["runtime-actix-native-tls","postgres","u
 uuid = "0.8.2"
 
 [features]
+
+[profile.release]
+lto = true
