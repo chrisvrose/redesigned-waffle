@@ -8,12 +8,14 @@ GET http://localhost:8080/subject/1
 POST http://localhost:8080/subject
 Content-Type: application/json
 
-{
-    "id":1,
-    "name":23,
-    "courseCode":"pain"
-}
-
+[{
+    "coursecode": "18CS86",
+    "name": "Hello",
+    "semester": 7,
+    "isglobal": false,
+    "deptid": "CSE",
+    "maxcapacity": 340
+}]
 ### list users
 GET http://localhost:8080/user
 

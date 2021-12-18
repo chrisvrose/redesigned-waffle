@@ -17,13 +17,13 @@ pub async fn get_all_subs(appdata:Data<AppData>) -> impl Responder {
 }
 
 #[post("")]
-pub async fn add_sub(data:web::Json<Subject>,appdata:Data<AppData>)->impl Responder{
+pub async fn add_sub(data:web::Json<Vec<Subject>>,appdata:Data<AppData>)->impl Responder{
     let dbpool = &appdata.as_ref().pool;
 
     let data = data.into_inner();
     let response = Subject::insert(&data, dbpool).await;
     match response{
-        Ok(v)=>HttpResponse::Ok().json(serde_json::json!({"ok":v>0  })),
+        Ok(v)=>HttpResponse::Ok().json(serde_json::json!({"ok":v  })),
         Err(_)=>HttpResponse::BadRequest().json(serde_json::json!({"ok":false}))
     }
 }
