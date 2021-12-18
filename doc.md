@@ -1,6 +1,6 @@
 | API               | TYPE   | DESC                           | Stat               |
 | ----------------- | ------ | ------------------------------ | ------------------ |
-| `user`            | POST   | new user(bulk)                 |                    |
+| `user`            | POST   | new user(bulk)                 | :heavy_check_mark: |
 | `user`            | DELETE | (bulk)                         |                    |
 | `user`            | GET    | get users                      | :heavy_check_mark: |
 | `user/:id`        | GET    | details                        |                    |

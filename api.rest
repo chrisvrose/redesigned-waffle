@@ -17,17 +17,25 @@ Content-Type: application/json
 ### list users
 GET http://localhost:8080/user
 
-### add user
+### add user (list)
 POST http://localhost:8080/user
 Content-Type: application/json
 
-{
+[{
     "name":"Atreya",
     "email":"atreya@gmail.com",
     "pwd":"hello",
     "semester":7,
     "deptid":"CSE"
+},
+{
+    "name":"Atreya Bain",
+    "email":"atreyabain@gmail.com",
+    "pwd":"hello",
+    "semester":5,
+    "deptid":"CSE"
 }
+]
 
 ### login
 POST http://localhost:8080/auth

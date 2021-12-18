@@ -36,7 +36,7 @@ impl UserAuth {
         .fetch_optional(dbpool)
         .await?;
 
-        if let Some(resultrow) = (resultrow) {
+        if let Some(resultrow) = resultrow {
             let mut verifier = argonautica::Verifier::default();
             let is_valid = verifier
                 .with_hash(&(resultrow.pwd))
@@ -54,7 +54,5 @@ impl UserAuth {
         } else {
             Err(Error::RowNotFound)
         }
-
-        // Ok(res)
     }
 }
