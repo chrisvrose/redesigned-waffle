@@ -1,6 +1,6 @@
 use crate::{models::{NewUserDTO, UserAuth}, misc::AppData};
 use actix_web::{get, post, web::Data, HttpResponse, Responder};
-use sqlx::PgPool;
+
 
 #[get("")]
 pub async fn get_all(appstate: Data<AppData>) -> impl Responder {
@@ -14,7 +14,7 @@ pub async fn get_all(appstate: Data<AppData>) -> impl Responder {
 
 #[post("")]
 pub async fn add_user(
-    user: actix_web::web::Json<NewUserDTO>,
+    user: actix_web::web::Json<Vec<NewUserDTO>>,
     appdata: Data<AppData>,
     
 ) -> impl Responder {
