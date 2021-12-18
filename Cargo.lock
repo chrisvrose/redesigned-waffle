@@ -249,6 +249,7 @@ dependencies = [
  "num_cpus",
  "rand 0.6.5",
  "scopeguard 1.1.0",
+ "serde",
  "tempdir",
 ]
 

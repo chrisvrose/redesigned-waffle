@@ -14,10 +14,10 @@ Content-Type: application/json
     "courseCode":"pain"
 }
 
-###
+### list users
 GET http://localhost:8080/user
 
-###
+### add user
 POST http://localhost:8080/user
 Content-Type: application/json
 
@@ -26,7 +26,16 @@ Content-Type: application/json
     "email":"atreya@gmail.com",
     "pwd":"hello",
     "semester":7,
-    "dept":"CSE"
+    "deptid":"CSE"
+}
+
+### login
+POST http://localhost:8080/auth
+Content-Type: application/json
+
+{
+    "email":"atreya@gmail.com",
+    "pwd":"hello"
 }
 
 ###
