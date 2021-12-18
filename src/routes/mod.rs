@@ -4,11 +4,12 @@ mod subject;
 mod up;
 mod userauth;
 mod dept;
+mod auth;
 
 /// Function that adds the routes
-pub fn init(serviceConfig: &mut ServiceConfig) {
+pub fn init(service_config: &mut ServiceConfig) {
     // add the up route
-    serviceConfig
+    service_config
         .service(actix_web::web::scope("/up").service(up::up))
         // add the subject routes
         .service(
@@ -22,6 +23,8 @@ pub fn init(serviceConfig: &mut ServiceConfig) {
                 .service(userauth::get_all)
                 .service(userauth::add_user),
         )
+        .service(actix_web::web::scope("/auth").service(auth::login))
+
         .service(
             actix_web::web::scope("/dept").service(dept::get_all)
         );

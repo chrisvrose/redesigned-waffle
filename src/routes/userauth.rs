@@ -19,7 +19,7 @@ pub async fn add_user(
     
 ) -> impl Responder {
     let dbpool = &appdata.as_ref().pool;
-    let salt = &appdata.as_ref().salt;
+    let salt = &appdata.as_ref().pepper_secret;
     let resp = UserAuth::add_user(&user, dbpool, salt).await;
     match resp {
         Ok(addedid) => HttpResponse::Ok().json(addedid),

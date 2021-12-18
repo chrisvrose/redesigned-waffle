@@ -2,7 +2,8 @@ use serde::Serialize;
 use sqlx::PgPool;
 pub mod auth;
 pub struct AppData {
-    pub salt: String,
+    pub pepper_secret: String,
+    pub jwt_secret:String,
     pub pool: PgPool,
 }
 
