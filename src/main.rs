@@ -36,7 +36,6 @@ async fn main() -> std::io::Result<()> {
                     if let Ok(x) = header.to_str() {
                         let res = x.trim().split(' ').nth(1);
                         if let Some(res) = res {
-                            println!("Pain {:?}", res);
                             let res: &String = &res.into();
 
                             if let Ok(user) = validate_jwt(&jwt_secret_for_middleware, res) {

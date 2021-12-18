@@ -2,6 +2,12 @@
 GET http://localhost:8080/up
 ###
 GET http://localhost:8080/subject
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOjEsImV4cCI6MTY0MDI3NjcwMn0.KIbtWh3UdzXOAhVjmqCPCbOyPkK11vtZlY9txl6Jq5g
+
+###
+GET http://localhost:8080/subject/all
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOjEsImV4cCI6MTY0MDI3NjcwMn0.KIbtWh3UdzXOAhVjmqCPCbOyPkK11vtZlY9txl6Jq5g
+
 ###
 GET http://localhost:8080/subject/1
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOjEsImV4cCI6MTY0MDI3NjcwMn0.KIbtWh3UdzXOAhVjmqCPCbOyPkK11vtZlY9txl6Jq5g
@@ -11,10 +17,10 @@ POST http://localhost:8080/subject
 Content-Type: application/json
 
 [{
-    "coursecode": "18CS86",
-    "name": "Hello",
+    "coursecode": "18CS56",
+    "name": "small junior",
     "semester": 7,
-    "isglobal": false,
+    "isglobal": true,
     "deptid": "CSE",
     "maxcapacity": 340
 }]

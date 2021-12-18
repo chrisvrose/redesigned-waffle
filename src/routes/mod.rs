@@ -15,6 +15,7 @@ pub fn init(service_config: &mut ServiceConfig) {
         .service(
             actix_web::web::scope("/subject")
                 .service(subject::get_all_subs)
+                .service(subject::get_user_subs)
                 .service(subject::get_one)
                 .service(subject::add_sub),
         )

@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use sqlx::{query, query_as, Pool, Postgres};
+use sqlx::{query, query_as, Pool, Postgres, PgPool};
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Subject {
     pub coursecode: String,
@@ -16,6 +16,12 @@ impl Subject {
             .fetch_all(db)
             .await;
         resp
+    }
+
+    pub async fn get_for_user(id:&i32,db:&PgPool)->Result<Vec<Subject>,sqlx::error::Error>{
+        let resp = query_as!(Subject,"select subject.* from subject,userauth where userauth.uid=$1 and userauth.semester=subject.semester and ((subject.isglobal and userauth.deptid!=subject.deptid) or (not(subject.isglobal) and userauth.deptid=subject.deptid))",id).fetch_all(db).await?;
+
+        Ok(resp)
     }
 
     pub async fn get_one(
