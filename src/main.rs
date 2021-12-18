@@ -1,7 +1,9 @@
-use actix_web::{middleware::Logger, web::Data, App, HttpServer};
-use misc::AppData;
-use sqlx::{self, PgPool};
+use actix_web::{dev::Service, middleware::Logger, web::Data, App, HttpMessage, HttpServer};
 use dotenv::dotenv;
+use futures::future::FutureExt;
+use misc::{auth::validate_jwt, AppData};
+use models::UserAuth;
+use sqlx::{self, PgPool};
 // load modules
 mod middleware;
 mod misc;
@@ -23,11 +25,33 @@ async fn main() -> std::io::Result<()> {
         .expect("Could not connect");
 
     HttpServer::new(move || {
+        let jwt_secret = jwt_secret.clone();
+
+        // this is a copy made for the middleware to use -> since this function will die after creation, this copy will be used by the middleware later
+        let jwt_secret_for_middleware = jwt_secret.clone();
         App::new()
+            .wrap_fn(move |req, srv| {
+                let header = req.headers().get("Authorization");
+                if let Some(header) = header {
+                    if let Ok(x) = header.to_str() {
+                        let res = x.trim().split(' ').nth(1);
+                        if let Some(res) = res {
+                            println!("Pain {:?}", res);
+                            let res: &String = &res.into();
+
+                            if let Ok(user) = validate_jwt(&jwt_secret_for_middleware, res) {
+                                let mut exts = req.extensions_mut();
+                                exts.insert(user.uid);
+                            }
+                        }
+                    }
+                }
+                srv.call(req).map(|res| res)
+            })
             .app_data(Data::new(AppData {
                 pool: pool.clone(),
                 pepper_secret: salt.clone(),
-                jwt_secret: jwt_secret.clone()
+                jwt_secret: jwt_secret,
             }))
             // .app_data(Data::new(salt.clone()))
             .wrap(Logger::default())

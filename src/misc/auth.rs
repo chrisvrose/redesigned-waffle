@@ -5,8 +5,8 @@ use std::time::{UNIX_EPOCH};
 /// parts of the authtoken we are concerned about
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AuthTokenData {
-    uid: i32,
-    exp: usize,
+    pub uid: i32,
+    pub exp: usize,
 }
 
 /// add days to current timestamp
@@ -35,11 +35,15 @@ pub fn issue_jwt(key: &String, uid: i32,expdays:u8) -> Result<String, JWTError> 
 }
 /// validate a jwt and return the uid
 pub fn validate_jwt(key: &String, token: &String) -> Result<AuthTokenData, JWTError> {
+    // let key = key.into();
+    // let key:&String = & (*key).into();
     let key = key.as_bytes();
+
+    // let token:&String = &(*token).into();
     
 
     let res = decode::<AuthTokenData>(
-        &token,
+        token,
         &DecodingKey::from_secret(key),
         &Validation::default(),
     )?;

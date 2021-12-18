@@ -4,6 +4,8 @@ GET http://localhost:8080/up
 GET http://localhost:8080/subject
 ###
 GET http://localhost:8080/subject/1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOjEsImV4cCI6MTY0MDI3NjcwMn0.KIbtWh3UdzXOAhVjmqCPCbOyPkK11vtZlY9txl6Jq5g
+
 ###
 POST http://localhost:8080/subject
 Content-Type: application/json
