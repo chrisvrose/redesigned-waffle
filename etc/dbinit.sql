@@ -10,8 +10,7 @@ create table if not EXISTS userauth (
     semester int not null,
     deptid char(4) not null,
     foreign key (deptid) references dept(deptid),
-    check (semester>=0)
-
+    check (semester >= 0)
 );
 create table if not EXISTS subject (
     coursecode char(8) primary key not null,
@@ -21,12 +20,13 @@ create table if not EXISTS subject (
     deptid char(4) not null,
     maxcapacity int not null,
     foreign key (deptid) references dept(deptid),
-    check (semester>=0)
+    check (semester >= 0)
 );
-
-
 begin;
 insert into dept
 values('CSE', 'Computer Science and Engineering'),
-    ('CV', 'Civil Engineering');
+    ('CV', 'Civil Engineering'),
+    ('ME', 'Mechanical Engineering'),
+    ('ISE', 'Information Science Engineering'),
+    ('PY', 'Physics');
 commit;

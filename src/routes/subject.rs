@@ -1,10 +1,13 @@
 use actix_web::{
     get, post,
     web::{self, Data},
-    HttpRequest, HttpResponse, Responder,
+    HttpResponse, Responder,
 };
 
-use crate::{misc::AppData, models::Subject};
+use crate::{
+    misc::{auth::UserType, AppData},
+    models::Subject,
+};
 use serde_json::value::Value;
 
 #[get("all")]
@@ -21,25 +24,34 @@ pub async fn get_all_subs(appdata: Data<AppData>) -> impl Responder {
     }
 }
 
+/// show possible subs for user or all for teachers
 #[get("")]
 pub async fn get_user_subs(
-    uid: Option<web::ReqData<i32>>,
+    uid: Option<web::ReqData<UserType>>,
     appdata: Data<AppData>,
 ) -> impl Responder {
     let dbpool = &appdata.as_ref().pool;
 
-    // let mut x = HttpResponse::Ok();
-
     match uid {
-        Some(uid) => {
-            let vals = Subject::get_for_user(&uid, dbpool).await;
-            if let Ok(vals) = vals {
-                HttpResponse::Ok().json(vals)
-            } else {
-                HttpResponse::NotFound().json(serde_json::json!([]))
+        Some(usertype) => match usertype.into_inner() {
+            UserType::Student(uid) => {
+                let vals = Subject::get_for_user(&uid, dbpool).await;
+                if let Ok(vals) = vals {
+                    HttpResponse::Ok().json(vals)
+                } else {
+                    HttpResponse::NotFound().json(serde_json::json!([]))
+                }
             }
-        }
-        None => HttpResponse::NotFound().json(serde_json::json!([])),
+            UserType::Admin(_) => {
+                let vals = Subject::get_all( dbpool).await;
+                if let Ok(vals) = vals {
+                    HttpResponse::Ok().json(vals)
+                } else {
+                    HttpResponse::NotFound().json(serde_json::json!([]))
+                }
+            }
+        },
+        None => HttpResponse::Forbidden().json(serde_json::json!([])),
     }
 }
 

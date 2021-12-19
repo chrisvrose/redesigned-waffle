@@ -32,7 +32,7 @@ pub struct UserAuth {
 
 impl UserAuth {
     /// convert to a simpler output model
-    pub fn out(self) -> OutUserDTO {
+    pub fn _out(self) -> OutUserDTO {
         OutUserDTO {
             uid: self.uid,
             email: self.email,

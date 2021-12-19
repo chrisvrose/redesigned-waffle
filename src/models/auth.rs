@@ -1,8 +1,7 @@
 use serde::{Deserialize, Serialize};
 use sqlx::{query_as, Error, PgPool};
 
-use crate::misc::auth::issue_jwt;
-
+use crate::misc::auth::{issue_jwt,UserType};
 use super::UserAuth;
 
 // login credentials wrapper
@@ -22,7 +21,7 @@ struct UserAuthCredsUid {
 }
 
 impl UserAuth {
-    pub async fn login(
+    pub async fn login_student(
         x: &UserAuthCredsDTO,
         dbpool: &PgPool,
         pepper: &String,
@@ -45,7 +44,7 @@ impl UserAuth {
                 .verify();
             let is_valid = is_valid.unwrap_or(false);
             if is_valid {
-                let res = issue_jwt(jwt_key, resultrow.uid, 5).map_or(None, |v| Some(v));
+                let res = issue_jwt(jwt_key, UserType::Student(resultrow.uid), 5).map_or(None, |v| Some(v));
                 Ok(res)
             } else {
                 // Ok(None)

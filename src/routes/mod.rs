@@ -24,7 +24,7 @@ pub fn init(service_config: &mut ServiceConfig) {
                 .service(userauth::get_all)
                 .service(userauth::add_user),
         )
-        .service(actix_web::web::scope("/auth").service(auth::login))
+        .service(actix_web::web::scope("/auth").service(auth::login_student))
 
         .service(
             actix_web::web::scope("/dept").service(dept::get_all)

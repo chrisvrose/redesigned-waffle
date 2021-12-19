@@ -2,10 +2,8 @@ use actix_web::{dev::Service, middleware::Logger, web::Data, App, HttpMessage, H
 use dotenv::dotenv;
 use futures::future::FutureExt;
 use misc::{auth::validate_jwt, AppData};
-use models::UserAuth;
 use sqlx::{self, PgPool};
 // load modules
-mod middleware;
 mod misc;
 mod models;
 mod routes;
@@ -31,6 +29,7 @@ async fn main() -> std::io::Result<()> {
         let jwt_secret_for_middleware = jwt_secret.clone();
         App::new()
             .wrap_fn(move |req, srv| {
+                // just inspect the authorization header and use it
                 let header = req.headers().get("Authorization");
                 if let Some(header) = header {
                     if let Ok(x) = header.to_str() {
@@ -50,7 +49,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(Data::new(AppData {
                 pool: pool.clone(),
                 pepper_secret: salt.clone(),
-                jwt_secret: jwt_secret,
+                jwt_secret,
             }))
             // .app_data(Data::new(salt.clone()))
             .wrap(Logger::default())

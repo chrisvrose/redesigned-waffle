@@ -42,7 +42,7 @@ impl Subject {
         let mut tx = db.begin().await?;
         // let resp = query!("Insert into subject select * from ")
         for data in datum {
-            let resp = query!(
+            /* let resp = */ query!(
                 "INSERT INTO subject values($1,$2,$3,$4,$5,$6)",
                 data.coursecode,
                 data.name,

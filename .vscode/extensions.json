@@ -1,5 +1,9 @@
 {
     "recommendations": [
-        "humao.rest-client"
+        "humao.rest-client",
+        "bungcip.better-toml",
+        "vadimcn.vscode-lldb",
+        "serayuzgur.crates",
+        "matklad.rust-analyzer"
     ]
 }
