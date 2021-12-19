@@ -4,7 +4,8 @@
 | `user`            | DEL  | (bulk)                 |                    |      |
 | `user`            | GET  | get users              | :heavy_check_mark: |      |
 | `user/:id`        | GET  | details                |                    |      |
-| `auth`            | POST | Login                  |                    |      |
+| `auth`            | POST | Login                  | :heavy_check_mark: |   Y   |
+| `auth/admin`      | POST | Login admin            |                    |      |
 | `dept`            | GET  | list departments       | :heavy_check_mark: |      |
 | `dept`            | POST | Create dept            |                    |      |
 | `dept`            | DEL  | Delete dept            |                    |      |

@@ -2,15 +2,15 @@
 GET http://localhost:8080/up
 ###
 GET http://localhost:8080/subject
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOjEsImV4cCI6MTY0MDI3NjcwMn0.KIbtWh3UdzXOAhVjmqCPCbOyPkK11vtZlY9txl6Jq5g
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOnsiU3R1ZGVudCI6MX0sImV4cCI6MTY0MDMyNTIzNX0.Zc27vrvhOxE5FBGy8IH3IaFKvJ0dNpdu-wxDbQDi1Xk
 
 ###
-GET http://localhost:8080/subject/all
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOjEsImV4cCI6MTY0MDI3NjcwMn0.KIbtWh3UdzXOAhVjmqCPCbOyPkK11vtZlY9txl6Jq5g
+GET http://localhost:8080/subject
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOnsiU3R1ZGVudCI6MX0sImV4cCI6MTY0MDMyNTIzNX0.Zc27vrvhOxE5FBGy8IH3IaFKvJ0dNpdu-wxDbQDi1Xk
 
-###
+### one sub
 GET http://localhost:8080/subject/1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOjEsImV4cCI6MTY0MDI3NjcwMn0.KIbtWh3UdzXOAhVjmqCPCbOyPkK11vtZlY9txl6Jq5g
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOnsiU3R1ZGVudCI6MX0sImV4cCI6MTY0MDMyNTIzNX0.Zc27vrvhOxE5FBGy8IH3IaFKvJ0dNpdu-wxDbQDi1Xk
 
 ###
 POST http://localhost:8080/subject
