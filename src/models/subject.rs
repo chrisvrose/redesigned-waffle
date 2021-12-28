@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use sqlx::{query, query_as, Pool, Postgres, PgPool};
+use sqlx::{query, query_as, PgPool, Pool, Postgres};
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Subject {
     pub coursecode: String,
@@ -18,7 +18,7 @@ impl Subject {
         resp
     }
 
-    pub async fn get_for_user(id:&i32,db:&PgPool)->Result<Vec<Subject>,sqlx::error::Error>{
+    pub async fn get_for_user(id: &i32, db: &PgPool) -> Result<Vec<Subject>, sqlx::error::Error> {
         let resp = query_as!(Subject,"select subject.* from subject,userauth where userauth.uid=$1 and userauth.semester=subject.semester and ((subject.isglobal and userauth.deptid!=subject.deptid) or (not(subject.isglobal) and userauth.deptid=subject.deptid))",id).fetch_all(db).await?;
 
         Ok(resp)
@@ -34,28 +34,26 @@ impl Subject {
         Ok(resp)
     }
 
-    pub async fn insert(
-        datum: &Vec<Subject>,
-        db: &Pool<Postgres>,
-    ) -> Result<usize, sqlx::error::Error> {
+    pub async fn insert(data: &Subject, db: &Pool<Postgres>) -> Result<u64, sqlx::error::Error> {
         // start transaction
         let mut tx = db.begin().await?;
         // let resp = query!("Insert into subject select * from ")
-        for data in datum {
-            /* let resp = */ query!(
-                "INSERT INTO subject values($1,$2,$3,$4,$5,$6)",
-                data.coursecode,
-                data.name,
-                data.semester,
-                data.isglobal,
-                data.deptid,
-                data.maxcapacity
-            )
-            .execute(&mut tx)
-            .await?;
-            // commit
-        }
+
+        /* let resp = */
+        let resp = query!(
+            "INSERT INTO subject values($1,$2,$3,$4,$5,$6)",
+            data.coursecode,
+            data.name,
+            data.semester,
+            data.isglobal,
+            data.deptid,
+            data.maxcapacity
+        )
+        .execute(&mut tx)
+        .await?;
+        // commit
+
         tx.commit().await?;
-        return Ok(datum.len());
+        return Ok(resp.rows_affected());
     }
 }

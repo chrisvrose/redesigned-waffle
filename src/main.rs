@@ -13,7 +13,7 @@ const PORT: u16 = 8080;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
-
+    
     let database_url = std::env::var("DATABASE_URL").expect("Nothing");
     let salt = std::env::var("SALTEDSECRET").expect("No Salted secret");
     let jwt_secret = std::env::var("JWTSECRET").expect("No JWT secret");

@@ -17,8 +17,7 @@ create table if not exists teachers(
     uid serial primary key,
     email varchar(64) unique not null,
     name varchar(32) not null,
-    pwd varchar(512) not null,
-    foreign key (deptid) references dept(deptid)
+    pwd varchar(512) not null
 );
 create table if not EXISTS subject (
     coursecode char(8) primary key not null,
@@ -37,4 +36,6 @@ values('CSE', 'Computer Science and Engineering'),
     ('ME', 'Mechanical Engineering'),
     ('ISE', 'Information Science Engineering'),
     ('PY', 'Physics');
+
+
 commit;

@@ -53,49 +53,46 @@ impl UserAuth {
     }
     /// add a user
     pub async fn add_user(
-        users: &Vec<NewUserDTO>,
+        user: &NewUserDTO,
         db: &PgPool,
         salt: &String,
-    ) -> Result<Vec<i32>, SqlxError> {
+    ) -> Result<i32, SqlxError> {
         let mut hasher = argonautica::Hasher::default();
         let mut tx = db.begin().await?;
-        let mut userlist:Vec<i32>  = Vec::new();
-        for user in users {
-            let pwdref = &(user.pwd);
-            // let pwdhash = hasher.with
-            let response = query!(
-            "INSERT INTO userauth(name,email,pwd,semester,deptid) values($1,$2,$3,$4,$5) returning uid",
-            user.name,
-            user.email,
-            "foobar",
-            user.semester,
-            user.deptid
-        )
-        .fetch_one(&mut tx)
-        .await?;
 
-            // only after inserting the user, actually generate a password. Otherwise, not worth the effort of hashing
-
-            let hashed_pwd = hasher
-                .with_password(pwdref)
-                .with_secret_key(salt)
-                .hash()
-                .unwrap();
-            //get this data type
-            let inserteduid = response.uid;
-            /* let update_pwd_status = */
-            query!(
-                "update userauth set pwd=$1 where uid=$2",
-                hashed_pwd,
-                inserteduid
+        let pwdref = &(user.pwd);
+        // let pwdhash = hasher.with
+        let response = query!(
+                "INSERT INTO userauth(name,email,pwd,semester,deptid) values($1,$2,$3,$4,$5) returning uid",
+                user.name,
+                user.email,
+                "foobar",
+                user.semester,
+                user.deptid
             )
-            .execute(&mut tx)
+            .fetch_one(&mut tx)
             .await?;
-            userlist.push(inserteduid);
-        }
+
+        // only after inserting the user, actually generate a password. Otherwise, not worth the effort of hashing
+
+        let hashed_pwd = hasher
+            .with_password(pwdref)
+            .with_secret_key(salt)
+            .hash()
+            .unwrap();
+        // get this data type
+        let inserteduid = response.uid;
+        /* let update_pwd_status = */
+        query!(
+            "update userauth set pwd=$1 where uid=$2",
+            hashed_pwd,
+            inserteduid
+        )
+        .execute(&mut tx)
+        .await?;
 
         tx.commit().await?;
 
-        Ok(userlist)
+        Ok(inserteduid)
     }
 }

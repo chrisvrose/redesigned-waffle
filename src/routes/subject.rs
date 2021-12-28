@@ -56,7 +56,7 @@ pub async fn get_user_subs(
 }
 
 #[post("")]
-pub async fn add_sub(data: web::Json<Vec<Subject>>, appdata: Data<AppData>) -> impl Responder {
+pub async fn add_sub(data: web::Json<Subject>, appdata: Data<AppData>) -> impl Responder {
     let dbpool = &appdata.as_ref().pool;
 
     let data = data.into_inner();
