@@ -66,7 +66,7 @@ impl UserAuth {
                 "INSERT INTO userauth(name,email,pwd,semester,deptid) values($1,$2,$3,$4,$5) returning uid",
                 user.name,
                 user.email,
-                "foobar",
+                Option::<String>::None,
                 user.semester,
                 user.deptid
             )
@@ -94,5 +94,10 @@ impl UserAuth {
         tx.commit().await?;
 
         Ok(inserteduid)
+    }
+    pub async fn remove_user(uid:&i32,db:&PgPool)->Result<u64,SqlxError> {
+        let x = query!("delete from userauth where uid=$1",uid).execute(db).await?;
+
+        Ok(x.rows_affected())
     }
 }

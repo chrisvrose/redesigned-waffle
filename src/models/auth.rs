@@ -11,7 +11,7 @@ pub struct UserAuthCredsDTO {
     pub pwd: String,
 }
 
-/// result from db
+/// result from db -> mayn't include pwd
 #[derive(Deserialize, Serialize, Debug)]
 
 struct UserAuthCredsUid {
@@ -35,16 +35,16 @@ impl UserAuth {
         .fetch_optional(dbpool)
         .await?;
 
-        if let Some(resultrow) = resultrow {
+        if let Some(UserAuthCredsUid{pwd,uid,..}) = resultrow {
             let mut verifier = argonautica::Verifier::default();
             let is_valid = verifier
-                .with_hash(&(resultrow.pwd))
+                .with_hash(&(pwd))
                 .with_password(&(x.pwd))
                 .with_secret_key(pepper.as_bytes())
                 .verify();
             let is_valid = is_valid.unwrap_or(false);
             if is_valid {
-                let res = issue_jwt(jwt_key, UserType::Student(resultrow.uid), 5).map_or(None, |v| Some(v));
+                let res = issue_jwt(jwt_key, UserType::Student(uid), 5).map_or(None, |v| Some(v));
                 Ok(res)
             } else {
                 // Ok(None)

@@ -14,7 +14,7 @@ pub async fn get_all(appstate: Data<AppData>) -> impl Responder {
 
 #[post("")]
 pub async fn add_user(
-    user: actix_web::web::Json<Vec<NewUserDTO>>,
+    user: actix_web::web::Json<NewUserDTO>,
     appdata: Data<AppData>,
     
 ) -> impl Responder {
