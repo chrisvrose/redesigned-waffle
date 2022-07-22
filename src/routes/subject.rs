@@ -43,7 +43,7 @@ pub async fn get_user_subs(
                 }
             }
             UserType::Admin(_) => {
-                let vals = Subject::get_all( dbpool).await;
+                let vals = Subject::get_all(dbpool).await;
                 if let Ok(vals) = vals {
                     HttpResponse::Ok().json(vals)
                 } else {
