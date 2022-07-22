@@ -61,7 +61,7 @@ pub fn validate_jwt(key: &String, token: &String) -> Result<AuthTokenData, JWTEr
 }
 
 #[cfg(test)]
-pub mod tests {
+mod tests {
     use super::*;
     use jsonwebtoken::errors::Error as JWTError;
     #[test]
