@@ -1,7 +1,7 @@
 use actix_web::{dev::Service, middleware::Logger, web::Data, App, HttpMessage, HttpServer};
 use dotenv::dotenv;
 use futures::future::FutureExt;
-use misc::{auth::validate_jwt, AppData};
+use misc::{auth::validate_jwt, AppData, middleware::do_auth_insert};
 use sqlx::{self, PgPool};
 // load modules
 mod misc;
@@ -13,14 +13,15 @@ const PORT: u16 = 8080;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
-    
+    // prepare the required data and inject it
     let database_url = std::env::var("DATABASE_URL").expect("Nothing");
     let salt = std::env::var("SALTEDSECRET").expect("No Salted secret");
     let jwt_secret = std::env::var("JWTSECRET").expect("No JWT secret");
-    // pool
+    // prepare DB connection pool
     let pool = PgPool::connect(&database_url)
         .await
         .expect("Could not connect");
+
 
     HttpServer::new(move || {
         let jwt_secret = jwt_secret.clone();
@@ -28,30 +29,18 @@ async fn main() -> std::io::Result<()> {
         // this is a copy made for the middleware to use -> since this function will die after creation, this copy will be used by the middleware later
         let jwt_secret_for_middleware = jwt_secret.clone();
         App::new()
+            // just inspect the authorization header and use it
             .wrap_fn(move |req, srv| {
-                // just inspect the authorization header and use it
-                let header = req.headers().get("Authorization");
-                if let Some(header) = header {
-                    if let Ok(x) = header.to_str() {
-                        let res = x.trim().split(' ').nth(1);
-                        if let Some(res) = res {
-                            let res: &String = &res.into();
-
-                            if let Ok(user) = validate_jwt(&jwt_secret_for_middleware, res) {
-                                let mut exts = req.extensions_mut();
-                                exts.insert(user.uid);
-                            }
-                        }
-                    }
-                }
-                srv.call(req).map(|res| res)
+                do_auth_insert(&req,&jwt_secret_for_middleware);
+                srv.call(req)
             })
+            // insert app data
             .app_data(Data::new(AppData {
                 pool: pool.clone(),
                 pepper_secret: salt.clone(),
                 jwt_secret,
             }))
-            // .app_data(Data::new(salt.clone()))
+            // Create Logger
             .wrap(Logger::default())
             // add a set of routes
             .configure(crate::routes::init)

@@ -17,3 +17,11 @@
 | `book`            | POST | Create booking         |                    |      |
 | `book`            | DEL  | Unbook                 |                    |      |
 | `stat/:sem/:dept` | GET  | Make+get bookings list |                    |      |
+
+
+
+### Auth
+
+Every route passes through [middleware.rs](src/misc/middleware.rs), which pulls out the extension header and gets its value.
+
+Now, each route can configure its auth independently, by Requesting for `Option<web::ReqData<UserType>>`. If present, it is authenticated and the deets can be fetched. Else, unauthenticated.

@@ -11,7 +11,7 @@ pub struct UserAuthCredsDTO {
     pub pwd: String,
 }
 
-/// result from db -> mayn't include pwd
+/// result from db -> dont include pwd
 #[derive(Deserialize, Serialize, Debug)]
 
 struct UserAuthCredsUid {

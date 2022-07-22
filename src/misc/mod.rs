@@ -1,5 +1,6 @@
 use serde::Serialize;
 use sqlx::PgPool;
+pub mod middleware;
 pub mod auth;
 pub struct AppData {
     pub pepper_secret: String,

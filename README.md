@@ -62,3 +62,8 @@ Booking -> USN,CC
 3. Users book subjects? Better just add any amount
 4. Users can see stats?
 5. Report comes with result
+
+### TODO
+
+- [ ] Consider conventional composition for the sake of my sanity
+- [ ] Understand existing codebase

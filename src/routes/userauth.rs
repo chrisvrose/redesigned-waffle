@@ -1,5 +1,5 @@
 use crate::{models::{NewUserDTO, UserAuth}, misc::AppData};
-use actix_web::{get, post, web::Data, HttpResponse, Responder};
+use actix_web::{get, post, web::{Data, self}, HttpResponse, Responder, delete};
 
 
 #[get("")]
@@ -25,4 +25,11 @@ pub async fn add_user(
         Ok(addedid) => HttpResponse::Ok().json(addedid),
         Err(_) => HttpResponse::InternalServerError().body(""),
     }
+}
+
+#[delete("/{id}")]
+pub async fn delete(id:web::Path<i32>,appdata:Data<AppData>) -> impl Responder {
+    let db = &appdata.pool;
+    
+    HttpResponse::Ok().body("")
 }
