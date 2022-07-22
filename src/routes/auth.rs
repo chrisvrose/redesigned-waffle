@@ -13,8 +13,8 @@ use crate::models::{UserAuth, UserAuthCredsDTO};
 async fn login_student(appdata: Data<AppData>, logincreds: web::Json<UserAuthCredsDTO>) -> impl Responder {
     let dbpool = &(appdata.as_ref().pool);
     let jwt_key = &(appdata.as_ref().jwt_secret);
-    let pepper_key = &appdata.as_ref().pepper_secret;
-    let jwt = UserAuth::login_student(&logincreds, dbpool, pepper_key, jwt_key).await;
+    
+    let jwt = UserAuth::login_student(&logincreds, dbpool, jwt_key).await;
 
     jwt.map_or_else(
         |_x| HttpResponse::Forbidden().body(""),

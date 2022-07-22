@@ -42,7 +42,7 @@ async fn main() -> std::io::Result<()> {
             // insert app data
             .app_data(Data::new(AppData {
                 pool: pool.clone(),
-                pepper_secret: salt.clone(),
+                salt_secret: salt.clone(),
                 jwt_secret,
             }))
             // Create Logger

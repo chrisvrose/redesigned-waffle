@@ -2,8 +2,9 @@ use serde::Serialize;
 use sqlx::PgPool;
 pub mod middleware;
 pub mod auth;
+pub mod argon2_config;
 pub struct AppData {
-    pub pepper_secret: String,
+    pub salt_secret: String,
     pub jwt_secret:String,
     pub pool: PgPool,
 }

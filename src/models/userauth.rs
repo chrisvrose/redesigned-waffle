@@ -2,6 +2,8 @@ use log::debug;
 use serde::{Deserialize, Serialize};
 use sqlx::{query, query_as, Error as SqlxError, PgPool};
 
+use crate::misc::argon2_config;
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct NewUserDTO {
     pub name: String,
@@ -58,11 +60,12 @@ impl UserAuth {
         db: &PgPool,
         salt: &String,
     ) -> Result<i32, SqlxError> {
-        debug!("Attempting to add user for {}",user.email);
-        let mut hasher = argonautica::Hasher::default();
+        debug!("Attempting to add user for {}", user.email);
+
+
         let mut tx = db.begin().await?;
         let pwdref = &(user.pwd);
-        // let pwdhash = hasher.with
+
         let response = query!(
                 "INSERT INTO userauth(name,email,pwd,semester,deptid) values($1,$2,$3,$4,$5) returning uid",
                 user.name,
@@ -77,11 +80,8 @@ impl UserAuth {
 
         // only after inserting the user, actually generate a password. Otherwise, not worth the effort of hashing
 
-        let hashed_pwd = hasher
-            .with_password(pwdref)
-            .with_secret_key(salt)
-            .hash()
-            .unwrap();
+        let cfg = argon2_config::get_config();
+        let hashed_pwd = argon2::hash_encoded(pwdref.as_bytes(), salt.as_bytes(), &cfg).unwrap();
         // get this data type
         let inserteduid = response.uid;
         /* let update_pwd_status = */

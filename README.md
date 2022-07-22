@@ -65,5 +65,5 @@ Booking -> USN,CC
 
 ### TODO
 
+- [X] Understand existing codebase
 - [ ] Consider conventional composition for the sake of my sanity
-- [ ] Understand existing codebase

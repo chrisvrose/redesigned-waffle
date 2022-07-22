@@ -1,8 +1,9 @@
+use log::debug;
 use serde::{Deserialize, Serialize};
 use sqlx::{query_as, Error, PgPool};
 
-use crate::misc::auth::{issue_jwt,UserType};
 use super::UserAuth;
+use crate::misc::auth::{issue_jwt, UserType};
 
 // login credentials wrapper
 #[derive(Deserialize, Serialize, Debug)]
@@ -24,7 +25,6 @@ impl UserAuth {
     pub async fn login_student(
         x: &UserAuthCredsDTO,
         dbpool: &PgPool,
-        pepper: &String,
         jwt_key: &String,
     ) -> Result<Option<String>, sqlx::Error> {
         let resultrow = query_as!(
@@ -35,14 +35,16 @@ impl UserAuth {
         .fetch_optional(dbpool)
         .await?;
 
-        if let Some(UserAuthCredsUid{pwd,uid,..}) = resultrow {
-            let mut verifier = argonautica::Verifier::default();
-            let is_valid = verifier
-                .with_hash(&(pwd))
-                .with_password(&(x.pwd))
-                .with_secret_key(pepper.as_bytes())
-                .verify();
-            let is_valid = is_valid.unwrap_or(false);
+        if let Some(UserAuthCredsUid { pwd, uid, .. }) = resultrow {
+
+            let is_valid = argon2::verify_encoded(
+                pwd.as_str(),
+                x.pwd.as_bytes(),
+            );
+            let is_valid = is_valid.unwrap_or_else(|x| {
+                debug!("The user was not valid! {:?}", x);
+                false
+            });
             if is_valid {
                 let res = issue_jwt(jwt_key, UserType::Student(uid), 5).map_or(None, |v| Some(v));
                 Ok(res)
@@ -51,6 +53,7 @@ impl UserAuth {
                 Err(Error::RowNotFound)
             }
         } else {
+            debug!("Could not find user {}", x.email);
             Err(Error::RowNotFound)
         }
     }
