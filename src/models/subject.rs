@@ -34,26 +34,52 @@ impl Subject {
         Ok(resp)
     }
 
-    pub async fn insert(data: &Subject, db: &Pool<Postgres>) -> Result<u64, sqlx::error::Error> {
-        // start transaction
+    // pub async fn insert(data: &Subject, db: &Pool<Postgres>) -> Result<u64, sqlx::error::Error> {
+    //     // start transaction
+    //     let mut tx = db.begin().await?;
+    //     // let resp = query!("Insert into subject select * from ")
+
+    //     /* let resp = */
+    //     let resp = query!(
+    //         "INSERT INTO subject values($1,$2,$3,$4,$5,$6)",
+    //         data.coursecode,
+    //         data.name,
+    //         data.semester,
+    //         data.isglobal,
+    //         data.deptid,
+    //         data.maxcapacity
+    //     )
+    //     .execute(&mut tx)
+    //     .await?;
+    //     // commit
+
+    //     tx.commit().await?;
+    //     return Ok(resp.rows_affected());
+    // }
+
+    pub async fn insert_all(
+        subjects: &Vec<Subject>,
+        db: &Pool<Postgres>,
+    ) -> Result<Vec<u64>, sqlx::error::Error> {
         let mut tx = db.begin().await?;
-        // let resp = query!("Insert into subject select * from ")
+        let mut inserted_ids: Vec<u64> = Vec::new();
+        for subject in subjects {
+            let resp = query!(
+                "INSERT INTO subject values ($1,$2,$3,$4,$5,$6)",
+                subject.coursecode,
+                subject.name,
+                subject.semester,
+                subject.isglobal,
+                subject.deptid,
+                subject.maxcapacity
+            )
+            .execute(&mut tx)
+            .await?;
 
-        /* let resp = */
-        let resp = query!(
-            "INSERT INTO subject values($1,$2,$3,$4,$5,$6)",
-            data.coursecode,
-            data.name,
-            data.semester,
-            data.isglobal,
-            data.deptid,
-            data.maxcapacity
-        )
-        .execute(&mut tx)
-        .await?;
-        // commit
-
+            
+            inserted_ids.push(resp.rows_affected());
+        }
         tx.commit().await?;
-        return Ok(resp.rows_affected());
+        return Ok(inserted_ids);
     }
 }

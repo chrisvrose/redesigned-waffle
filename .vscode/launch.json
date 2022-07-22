@@ -7,20 +7,14 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug executable 'elebuild'",
+            "name": "Cargo launch",
             "cargo": {
                 "args": [
                     "build",
-                    "--bin=elebuild",
-                    "--package=elebuild"
-                ],
-                "filter": {
-                    "name": "elebuild",
-                    "kind": "bin"
-                }
+                ]
             },
-            "args": [],
-            "cwd": "${workspaceFolder}"
+            "program": "${cargo:program}",
+            "args": []
         },
         {
             "type": "lldb",

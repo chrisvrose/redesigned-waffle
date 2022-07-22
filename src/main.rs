@@ -1,18 +1,22 @@
-use actix_web::{dev::Service, middleware::Logger, web::Data, App, HttpMessage, HttpServer};
+use actix_web::{dev::Service, middleware::Logger, web::Data, App, HttpServer};
 use dotenv::dotenv;
-use futures::future::FutureExt;
-use misc::{auth::validate_jwt, AppData, middleware::do_auth_insert};
+
+use log::{debug, trace};
+use misc::{middleware::do_auth_insert, AppData};
 use sqlx::{self, PgPool};
 // load modules
 mod misc;
 mod models;
 mod routes;
 
+const ADDRESS: &str = "127.0.0.1";
 const PORT: u16 = 8080;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
+    pretty_env_logger::init();
+    trace!("App started");
     // prepare the required data and inject it
     let database_url = std::env::var("DATABASE_URL").expect("Nothing");
     let salt = std::env::var("SALTEDSECRET").expect("No Salted secret");
@@ -22,6 +26,7 @@ async fn main() -> std::io::Result<()> {
         .await
         .expect("Could not connect");
 
+    debug!("Got DB Connection, trying to start server");
 
     HttpServer::new(move || {
         let jwt_secret = jwt_secret.clone();
@@ -31,7 +36,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             // just inspect the authorization header and use it
             .wrap_fn(move |req, srv| {
-                do_auth_insert(&req,&jwt_secret_for_middleware);
+                do_auth_insert(&req, &jwt_secret_for_middleware);
                 srv.call(req)
             })
             // insert app data
@@ -45,7 +50,7 @@ async fn main() -> std::io::Result<()> {
             // add a set of routes
             .configure(crate::routes::init)
     })
-    .bind(format!("127.0.0.1:{}", PORT))?
+    .bind(format!("{}:{}", ADDRESS, PORT))?
     .run()
     .await
 }

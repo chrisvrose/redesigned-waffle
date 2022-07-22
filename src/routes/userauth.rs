@@ -1,6 +1,8 @@
-use crate::{models::{NewUserDTO, UserAuth}, misc::AppData};
-use actix_web::{get, post, web::{Data, self}, HttpResponse, Responder, delete};
-
+use crate::{
+    misc::AppData,
+    models::{NewUserDTO, UserAuth},
+};
+use actix_web::{get, post, web::Data, HttpResponse, Responder};
 
 #[get("")]
 pub async fn get_all(appstate: Data<AppData>) -> impl Responder {
@@ -16,20 +18,12 @@ pub async fn get_all(appstate: Data<AppData>) -> impl Responder {
 pub async fn add_user(
     user: actix_web::web::Json<NewUserDTO>,
     appdata: Data<AppData>,
-    
 ) -> impl Responder {
     let dbpool = &appdata.as_ref().pool;
     let salt = &appdata.as_ref().pepper_secret;
     let resp = UserAuth::add_user(&user, dbpool, salt).await;
     match resp {
         Ok(addedid) => HttpResponse::Ok().json(addedid),
-        Err(_) => HttpResponse::InternalServerError().body(""),
+        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
-}
-
-#[delete("/{id}")]
-pub async fn delete(id:web::Path<i32>,appdata:Data<AppData>) -> impl Responder {
-    let db = &appdata.pool;
-    
-    HttpResponse::Ok().body("")
 }

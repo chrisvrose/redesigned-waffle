@@ -56,12 +56,12 @@ pub async fn get_user_subs(
 }
 
 #[post("")]
-pub async fn add_sub(data: web::Json<Subject>, appdata: Data<AppData>) -> impl Responder {
+pub async fn add_subs(data: web::Json<Vec<Subject>>, appdata: Data<AppData>) -> impl Responder {
     let dbpool = &appdata.as_ref().pool;
 
     let data = data.into_inner();
 
-    let response = Subject::insert(&data, dbpool).await;
+    let response = Subject::insert_all(&data, dbpool).await;
 
     match response {
         Ok(v) => HttpResponse::Ok().json(serde_json::json!({ "ok": v })),

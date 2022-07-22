@@ -1,3 +1,4 @@
+use log::debug;
 use serde::{Deserialize, Serialize};
 use sqlx::{query, query_as, Error as SqlxError, PgPool};
 
@@ -57,16 +58,17 @@ impl UserAuth {
         db: &PgPool,
         salt: &String,
     ) -> Result<i32, SqlxError> {
+        debug!("Attempting to add user for {}",user.email);
         let mut hasher = argonautica::Hasher::default();
         let mut tx = db.begin().await?;
-
         let pwdref = &(user.pwd);
         // let pwdhash = hasher.with
         let response = query!(
                 "INSERT INTO userauth(name,email,pwd,semester,deptid) values($1,$2,$3,$4,$5) returning uid",
                 user.name,
                 user.email,
-                Option::<String>::None,
+                // put blank password first, refer below
+                "",
                 user.semester,
                 user.deptid
             )
@@ -95,9 +97,10 @@ impl UserAuth {
 
         Ok(inserteduid)
     }
-    pub async fn remove_user(uid:&i32,db:&PgPool)->Result<u64,SqlxError> {
-        let x = query!("delete from userauth where uid=$1",uid).execute(db).await?;
 
-        Ok(x.rows_affected())
-    }
+    // pub async fn remove_user(uid:&i32,db:&PgPool)->Result<u64,SqlxError> {
+    //     let x = query!("delete from userauth where uid=$1",uid).execute(db).await?;
+
+    //     Ok(x.rows_affected())
+    // }
 }

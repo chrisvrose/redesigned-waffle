@@ -6,7 +6,7 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOnsiU3R1ZGVud
 
 ###
 GET http://localhost:8080/subject
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOnsiU3R1ZGVudCI6MX0sImV4cCI6MTY0MDMyNTIzNX0.Zc27vrvhOxE5FBGy8IH3IaFKvJ0dNpdu-wxDbQDi1Xk
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOnsiU3R1ZGVudCI6MX0sImV4cCI6MTY1ODkwODk2MH0.NhP_Livsc738E7O2d2Tv9y-WEcxal5klfrH0UKjEnPw
 
 ### one sub
 GET http://localhost:8080/subject/1
@@ -46,6 +46,18 @@ Content-Type: application/json
     "deptid":"CSE"
 }
 ]
+
+### add user (one)
+POST http://localhost:8080/user
+Content-Type: application/json
+
+{
+    "name":"Atreya",
+    "email":"atreya@gmail.com",
+    "pwd":"hello",
+    "semester":7,
+    "deptid":"CSE"
+}
 
 ### login
 POST http://localhost:8080/auth
