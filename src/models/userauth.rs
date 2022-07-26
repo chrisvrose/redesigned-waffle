@@ -82,9 +82,10 @@ impl UserAuth {
 
         let cfg = argon2_config::get_config();
         let hashed_pwd = argon2::hash_encoded(pwdref.as_bytes(), salt.as_bytes(), &cfg).unwrap();
+        
         // get this data type
         let inserteduid = response.uid;
-        /* let update_pwd_status = */
+        
         query!(
             "update userauth set pwd=$1 where uid=$2",
             hashed_pwd,

@@ -3,6 +3,8 @@ use actix_web::{
     web::{self, Data},
     HttpResponse, Responder,
 };
+use sqlx::Error;
+
 
 use crate::{
     misc::{auth::UserType, AppData},
@@ -20,7 +22,7 @@ pub async fn get_all_subs(appdata: Data<AppData>) -> impl Responder {
     if let Ok(vals) = vals {
         HttpResponse::Ok().json(vals)
     } else {
-        HttpResponse::NotFound().json(serde_json::json!([]))
+        HttpResponse::NotFound().json(serde_json::json!({"ok":false,"reason":"Could not get records"}))
     }
 }
 
@@ -39,7 +41,7 @@ pub async fn get_user_subs(
                 if let Ok(vals) = vals {
                     HttpResponse::Ok().json(vals)
                 } else {
-                    HttpResponse::NotFound().json(serde_json::json!([]))
+                    HttpResponse::NotFound().json(serde_json::json!({"ok":false,"reason":"Could not get records"}))
                 }
             }
             UserType::Admin(_) => {
@@ -47,11 +49,11 @@ pub async fn get_user_subs(
                 if let Ok(vals) = vals {
                     HttpResponse::Ok().json(vals)
                 } else {
-                    HttpResponse::NotFound().json(serde_json::json!([]))
+                    HttpResponse::NotFound().json(serde_json::json!({"ok":false,"reason":"Could not get records"}))
                 }
             }
         },
-        None => HttpResponse::Forbidden().json(serde_json::json!([])),
+        None => HttpResponse::Forbidden().json(serde_json::json!({"ok":false,"reason":"Not a valid user"})),
     }
 }
 
@@ -65,7 +67,11 @@ pub async fn add_subs(data: web::Json<Vec<Subject>>, appdata: Data<AppData>) -> 
 
     match response {
         Ok(v) => HttpResponse::Ok().json(serde_json::json!({ "ok": v })),
-        Err(_) => HttpResponse::BadRequest().json(serde_json::json!({"ok":false})),
+        Err(Error::Database(err)) => HttpResponse::BadRequest()
+            .json(serde_json::json!({"ok":false,"reason":err.to_string()})),
+        Err(err) => HttpResponse::BadRequest().json(serde_json::json!({
+            "ok":false,"reason":err.to_string()
+        })),
     }
 }
 #[get("/{id}")]

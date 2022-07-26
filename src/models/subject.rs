@@ -60,24 +60,24 @@ impl Subject {
     pub async fn insert_all(
         subjects: &Vec<Subject>,
         db: &Pool<Postgres>,
-    ) -> Result<Vec<u64>, sqlx::error::Error> {
+    ) -> Result<Vec<String>, sqlx::error::Error> {
         let mut tx = db.begin().await?;
-        let mut inserted_ids: Vec<u64> = Vec::new();
+        let mut inserted_ids: Vec<String> = Vec::new();
         for subject in subjects {
             let resp = query!(
-                "INSERT INTO subject values ($1,$2,$3,$4,$5,$6)",
+                r#"INSERT INTO subject values ($1,$2,$3,$4,$5,$6) returning coursecode"#,
                 subject.coursecode,
                 subject.name,
                 subject.semester,
                 subject.isglobal,
                 subject.deptid,
                 subject.maxcapacity
-            )
-            .execute(&mut tx)
+            ).fetch_one(&mut tx)
+            // .execute(&mut tx)
             .await?;
 
             
-            inserted_ids.push(resp.rows_affected());
+            inserted_ids.push(resp.coursecode);
         }
         tx.commit().await?;
         return Ok(inserted_ids);
