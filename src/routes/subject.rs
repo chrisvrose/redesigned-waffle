@@ -3,8 +3,8 @@ use actix_web::{
     web::{self, Data},
     HttpResponse, Responder,
 };
+use log::error;
 use sqlx::Error;
-
 
 use crate::{
     misc::{auth::UserType, AppData},
@@ -22,7 +22,8 @@ pub async fn get_all_subs(appdata: Data<AppData>) -> impl Responder {
     if let Ok(vals) = vals {
         HttpResponse::Ok().json(vals)
     } else {
-        HttpResponse::NotFound().json(serde_json::json!({"ok":false,"reason":"Could not get records"}))
+        HttpResponse::NotFound()
+            .json(serde_json::json!({"ok":false,"reason":"Could not get records"}))
     }
 }
 
@@ -41,7 +42,8 @@ pub async fn get_user_subs(
                 if let Ok(vals) = vals {
                     HttpResponse::Ok().json(vals)
                 } else {
-                    HttpResponse::NotFound().json(serde_json::json!({"ok":false,"reason":"Could not get records"}))
+                    HttpResponse::NotFound()
+                        .json(serde_json::json!({"ok":false,"reason":"Could not get records"}))
                 }
             }
             UserType::Admin(_) => {
@@ -49,11 +51,13 @@ pub async fn get_user_subs(
                 if let Ok(vals) = vals {
                     HttpResponse::Ok().json(vals)
                 } else {
-                    HttpResponse::NotFound().json(serde_json::json!({"ok":false,"reason":"Could not get records"}))
+                    HttpResponse::NotFound()
+                        .json(serde_json::json!({"ok":false,"reason":"Could not get records"}))
                 }
             }
         },
-        None => HttpResponse::Forbidden().json(serde_json::json!({"ok":false,"reason":"Not a valid user"})),
+        None => HttpResponse::Forbidden()
+            .json(serde_json::json!({"ok":false,"reason":"Not a valid user"})),
     }
 }
 
@@ -69,9 +73,12 @@ pub async fn add_subs(data: web::Json<Vec<Subject>>, appdata: Data<AppData>) -> 
         Ok(v) => HttpResponse::Ok().json(serde_json::json!({ "ok": v })),
         Err(Error::Database(err)) => HttpResponse::BadRequest()
             .json(serde_json::json!({"ok":false,"reason":err.to_string()})),
-        Err(err) => HttpResponse::BadRequest().json(serde_json::json!({
-            "ok":false,"reason":err.to_string()
-        })),
+        Err(err) => {
+            error!("Error adding subs {}", err.to_string());
+            HttpResponse::BadRequest().json(serde_json::json!({
+                "ok":false,"reason":"Error adding subjects"
+            }))
+        }
     }
 }
 #[get("/{id}")]
@@ -79,6 +86,7 @@ pub async fn get_one(id: web::Path<String>, appdata: Data<AppData>) -> impl Resp
     let dbpool = &appdata.as_ref().pool;
 
     let str = id.into_inner();
+    log::trace!("Attempting to fetch course code {}",str);
     let vals = Subject::get_one(&str, dbpool).await;
     match vals {
         Ok(Some(x)) => HttpResponse::Ok().json(x),

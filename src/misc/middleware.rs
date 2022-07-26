@@ -3,6 +3,7 @@ use actix_web::{dev::ServiceRequest, HttpMessage};
 use log::trace;
 /// Insert authenticator details
 pub fn do_auth_insert(req: &ServiceRequest, jwt_secret_for_middleware: &String) {
+    trace!("HTTP request on {}",req.path());
     let header = req.headers().get("Authorization");
     if let Some(header) = header {
         if let Ok(x) = header.to_str() {

@@ -65,5 +65,13 @@ Booking -> USN,CC
 
 ### TODO
 
+
+#### Aims
+
+- [ ] Add subject booking recording
+- [ ] Add subject booking computations
+- [ ] Auth
+#### Misc
+
 - [X] Understand existing codebase
 - [ ] Consider conventional composition for the sake of my sanity
