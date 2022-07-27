@@ -51,3 +51,10 @@ pub async fn get_user(appdata:Data<AppData>,exts:Option<ReqData<UserType>>)->imp
         }
     }
 }
+
+// todo only for service accounts
+#[get("/calc")]
+pub async fn get_calc(appdata:Data<AppData>)->impl Responder{
+
+    HttpResponse::NotAcceptable().json(serde_json::json!({"ok":false}))
+}

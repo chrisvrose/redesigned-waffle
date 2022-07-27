@@ -30,6 +30,7 @@ pub fn init(service_config: &mut ServiceConfig) {
         .service(
             actix_web::web::scope("/book")
                 .service(book::get_user)
-                .service(book::make_booking),
+                .service(book::make_booking)
+                .service(book::get_calc)
         );
 }

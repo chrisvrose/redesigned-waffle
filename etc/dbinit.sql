@@ -33,6 +33,7 @@ create table if not EXISTS subject (
 create table if not EXISTS book (
     uid int not null,
     coursecode char(8) not null,
+    insert_time timestamp with time zone not null default now(),
     foreign key (uid) references userauth(uid),
     foreign key (coursecode) references subject(coursecode)
 );

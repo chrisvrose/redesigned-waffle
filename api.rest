@@ -90,12 +90,12 @@ GET http://localhost:8080/dept
 
 ### Get booking
 GET http://localhost:8080/book
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOnsiU3R1ZGVudCI6MX0sImV4cCI6MTY1OTMzODQwNn0.KUc8VTy7GPFCh7gcxOZeMPQMM6vrw9AedT0bXADoQ7Y
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOnsiU3R1ZGVudCI6MX0sImV4cCI6MTY1OTMzOTcwM30.3rwMiijBh9zFZiqSREpFnaCACm32-tO8wXgiGKbRuPI
 
 ### Make booking for student
 POST http://localhost:8080/book
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOnsiU3R1ZGVudCI6MX0sImV4cCI6MTY1OTMzODQwNn0.KUc8VTy7GPFCh7gcxOZeMPQMM6vrw9AedT0bXADoQ7Y
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOnsiU3R1ZGVudCI6MX0sImV4cCI6MTY1OTMzOTcwM30.3rwMiijBh9zFZiqSREpFnaCACm32-tO8wXgiGKbRuPI
 
 {
     "course_code":"18CS52"
