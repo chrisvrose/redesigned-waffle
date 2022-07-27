@@ -1,29 +1,45 @@
 ### test
 GET http://localhost:8080/up
-###
-GET http://localhost:8080/subject
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOnsiU3R1ZGVudCI6MX0sImV4cCI6MTY0MDMyNTIzNX0.Zc27vrvhOxE5FBGy8IH3IaFKvJ0dNpdu-wxDbQDi1Xk
+### Get all subs
+GET http://localhost:8080/subject/all
 
-###
+
+### Get subjects for user
 GET http://localhost:8080/subject
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOnsiU3R1ZGVudCI6MX0sImV4cCI6MTY1ODkwODk2MH0.NhP_Livsc738E7O2d2Tv9y-WEcxal5klfrH0UKjEnPw
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOnsiU3R1ZGVudCI6MX0sImV4cCI6MTY1OTI1MzI1OH0.4-sbULLyBjHl7W6rd7Qd9hdZPcktlOVf3mVwvirhRd4
 
 ### one sub
-GET http://localhost:8080/subject/1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOnsiU3R1ZGVudCI6MX0sImV4cCI6MTY0MDMyNTIzNX0.Zc27vrvhOxE5FBGy8IH3IaFKvJ0dNpdu-wxDbQDi1Xk
+GET http://localhost:8080/subject/18ME51
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOnsiU3R1ZGVudCI6Mn0sImV4cCI6MTY1ODkzMjQ2NX0.hEUtbBdS07mq5NGQSLh_GxDY_DtLyRcH1jGM0UlpJoA
 
-###
+### Add subjects
 POST http://localhost:8080/subject
 Content-Type: application/json
 
 [{
-    "coursecode": "18CS56",
-    "name": "small junior",
+    "coursecode": "18ME51",
+    "name": "Global Course From Mech",
     "semester": 7,
     "isglobal": true,
+    "deptid": "ME",
+    "maxcapacity": 340
+},{
+    "coursecode": "18CS52",
+    "name": "Non Global Course from cse",
+    "semester": 7,
+    "isglobal": false,
     "deptid": "CSE",
     "maxcapacity": 340
-}]
+},
+{
+    "coursecode": "18ME52",
+    "name": "Non Global Course from ME",
+    "semester": 7,
+    "isglobal": false,
+    "deptid": "ME",
+    "maxcapacity": 340
+}
+]
 ### list users
 GET http://localhost:8080/user
 
@@ -68,5 +84,19 @@ Content-Type: application/json
     "pwd":"hello"
 }
 
-###
+### Get departments
 GET http://localhost:8080/dept
+
+
+### Get booking
+GET http://localhost:8080/book
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOnsiU3R1ZGVudCI6MX0sImV4cCI6MTY1OTMzODQwNn0.KUc8VTy7GPFCh7gcxOZeMPQMM6vrw9AedT0bXADoQ7Y
+
+### Make booking for student
+POST http://localhost:8080/book
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOnsiU3R1ZGVudCI6MX0sImV4cCI6MTY1OTMzODQwNn0.KUc8VTy7GPFCh7gcxOZeMPQMM6vrw9AedT0bXADoQ7Y
+
+{
+    "course_code":"18CS52"
+}

@@ -1,10 +1,11 @@
 use actix_web::web::ServiceConfig;
 
+mod auth;
+mod book;
+mod dept;
 mod subject;
 mod up;
 mod userauth;
-mod dept;
-mod auth;
 
 /// Function that adds the routes
 pub fn init(service_config: &mut ServiceConfig) {
@@ -25,8 +26,10 @@ pub fn init(service_config: &mut ServiceConfig) {
                 .service(userauth::add_user),
         )
         .service(actix_web::web::scope("/auth").service(auth::login_student))
-
+        .service(actix_web::web::scope("/dept").service(dept::get_all))
         .service(
-            actix_web::web::scope("/dept").service(dept::get_all)
+            actix_web::web::scope("/book")
+                .service(book::get_user)
+                .service(book::make_booking),
         );
 }

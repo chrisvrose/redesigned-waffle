@@ -29,6 +29,13 @@ create table if not EXISTS subject (
     foreign key (deptid) references dept(deptid),
     check (semester >= 0)
 );
+
+create table if not EXISTS book (
+    uid int not null,
+    coursecode char(8) not null,
+    foreign key (uid) references userauth(uid),
+    foreign key (coursecode) references subject(coursecode)
+);
 begin;
 insert into dept
 values('CSE', 'Computer Science and Engineering'),

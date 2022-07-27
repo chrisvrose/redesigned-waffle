@@ -71,6 +71,7 @@ Booking -> USN,CC
 - [ ] Add subject booking recording
 - [ ] Add subject booking computations
 - [ ] Auth
+- [ ] Consider enabling and disabling bookings
 #### Misc
 
 - [X] Understand existing codebase
