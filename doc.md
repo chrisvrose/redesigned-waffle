@@ -1,3 +1,19 @@
+## User flows
+
+### Auth
+
+1. User signs up through username, password.
+2. User signs in using username password, gets token.
+3. User uses token for getting profile details.
+
+### Course creation
+
+1. Admin sets up course list.
+2. Admin
+
+
+## API list
+
 | API               | TYPE | DESC                              | Stat               | Auth |
 | ----------------- | ---- | --------------------------------- | ------------------ | ---- |
 | `user`            | POST | new user                          | :heavy_check_mark: |      |

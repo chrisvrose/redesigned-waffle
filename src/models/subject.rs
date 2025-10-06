@@ -72,11 +72,10 @@ impl Subject {
                 subject.isglobal,
                 subject.deptid,
                 subject.maxcapacity
-            ).fetch_one(&mut tx)
-            // .execute(&mut tx)
+            ).fetch_one(&mut *tx)
             .await?;
 
-            
+
             inserted_ids.push(resp.coursecode);
         }
         tx.commit().await?;

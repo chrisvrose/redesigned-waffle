@@ -9,26 +9,33 @@ edition = "2021"
 # The OG
 actix-web = "4"
 # For timestamp
-chrono = { version = "0.4.19", features = ["serde"] }
+chrono = { version = "0.4.42", features = ["serde"] }
 # Env variables
 dotenv = "0.15.0"
 # Future related helpers
-futures = "0.3.21"
+futures = "0.3.31"
 # JWT
 jsonwebtoken = "9"
 # Logger
-log = "0.4.17"
+log = "0.4.28"
 
 pretty_env_logger = "0.5.0"
 
-rust-argon2 = { version = "2.0", features = ["serde"] }
+rust-argon2 = { version = "3.0", features = ["serde"] }
 
 serde = "1.0"
 serde_json = "1.0"
-sqlx = { version = "0.7.3", features = ["runtime-tokio", "postgres", "uuid", "chrono"] }
-uuid = "1.6"
+sqlx = { version = "0.8.6", features = ["runtime-tokio", "postgres", "uuid", "chrono"] }
+uuid = "1.18.1"
 
 [features]
 
 [profile.release]
+lto = "thin"
+strip = "debuginfo"
+
+[profile.release-speed]
+inherits = "release"
 lto = true
+strip = "symbols"
+panic = "abort"

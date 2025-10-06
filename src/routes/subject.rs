@@ -7,7 +7,10 @@ use log::error;
 use sqlx::Error;
 
 use crate::{
-    misc::{auth::UserType, AppData},
+    misc::{
+        auth::{UserDetails, UserType},
+        AppData,
+    },
     models::Subject,
 };
 use serde_json::value::Value;
@@ -30,34 +33,31 @@ pub async fn get_all_subs(appdata: Data<AppData>) -> impl Responder {
 /// show possible subs for user or all for teachers
 #[get("")]
 pub async fn get_user_subs(
-    uid: Option<web::ReqData<UserType>>,
+    user_details_opt: Option<web::ReqData<UserDetails>>,
     appdata: Data<AppData>,
 ) -> impl Responder {
     let dbpool = &appdata.as_ref().pool;
 
-    match uid {
-        Some(usertype) => match usertype.into_inner() {
-            UserType::Student(uid) => {
-                let vals = Subject::get_for_user(&uid, dbpool).await;
-                if let Ok(vals) = vals {
-                    HttpResponse::Ok().json(vals)
-                } else {
-                    HttpResponse::NotFound()
-                        .json(serde_json::json!({"ok":false,"reason":"Could not get records"}))
+    match user_details_opt {
+        Some(usertype) => {
+            let UserDetails { uid, user_type } = usertype.into_inner();
+            let subjects_list_results = match user_type {
+                UserType::Student => {
+                    Subject::get_for_user(&uid, dbpool).await
                 }
-            }
-            UserType::Admin(_) => {
-                let vals = Subject::get_all(dbpool).await;
-                if let Ok(vals) = vals {
-                    HttpResponse::Ok().json(vals)
-                } else {
-                    HttpResponse::NotFound()
-                        .json(serde_json::json!({"ok":false,"reason":"Could not get records"}))
+                UserType::Admin => {
+                    Subject::get_all(dbpool).await
                 }
+            };
+            if let Ok(vals) = subjects_list_results {
+                HttpResponse::Ok().json(vals)
+            } else {
+                HttpResponse::NotFound()
+                    .json(serde_json::json!({"message":"Could not get records"}))
             }
-        },
+        }
         None => HttpResponse::Forbidden()
-            .json(serde_json::json!({"ok":false,"reason":"Not a valid user"})),
+            .json(serde_json::json!({"message":"Not a valid user"})),
     }
 }
 
@@ -86,7 +86,7 @@ pub async fn get_one(id: web::Path<String>, appdata: Data<AppData>) -> impl Resp
     let dbpool = &appdata.as_ref().pool;
 
     let str = id.into_inner();
-    log::trace!("Attempting to fetch course code {}",str);
+    log::trace!("Attempting to fetch course code {}", str);
     let vals = Subject::get_one(&str, dbpool).await;
     match vals {
         Ok(Some(x)) => HttpResponse::Ok().json(x),

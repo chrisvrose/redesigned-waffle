@@ -6,14 +6,15 @@ use actix_web::{
 };
 use serde_json::json;
 
+use crate::dto::UserAuthCredsDTO;
 use crate::misc::AppData;
-use crate::models::{UserAuth, UserAuthCredsDTO};
+use crate::models::{UserAuth};
 
 #[post("")]
 async fn login_student(appdata: Data<AppData>, logincreds: web::Json<UserAuthCredsDTO>) -> impl Responder {
     let dbpool = &(appdata.as_ref().pool);
     let jwt_key = &(appdata.as_ref().jwt_secret);
-    
+
     let jwt = UserAuth::login_student(&logincreds, dbpool, jwt_key).await;
 
     jwt.map_or_else(

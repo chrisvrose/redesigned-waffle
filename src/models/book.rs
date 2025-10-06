@@ -1,10 +1,7 @@
 use serde::{Serialize, Deserialize};
 use sqlx::{PgPool, query, query_as};
 
-#[derive(Serialize, Deserialize, Debug)]
-pub struct NewBookDTO{
-    pub course_code:String
-}
+
 
 #[derive(Serialize,Deserialize,Debug)]
 pub struct Booking{
@@ -15,7 +12,7 @@ pub struct Booking{
 impl Booking{
     pub async fn to_external(self:Self, db:&PgPool)->Result<BookingPresentation,sqlx::Error>{
         let Booking { uid, course_code,insert_time } = self;
-        
+
         let ans = query!("Select email from userauth where uid=$1",uid).fetch_one(db).await?;
         let email = ans.email;
 
@@ -54,7 +51,7 @@ impl BookingPresentation{
     /// get internal representation of booking
     pub async fn to_internal(self:Self,db:&PgPool)->Result<Booking,sqlx::Error>{
         let BookingPresentation {course_code,email,insert_time} = self;
-        
+
         let uidres = query!("Select uid from userauth where email=$1::varchar(64)",email).fetch_one(db).await?;
         let uid = uidres.uid;
 

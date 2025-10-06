@@ -3,14 +3,7 @@ use serde::{Deserialize, Serialize};
 use sqlx::{query_as, Error, PgPool};
 
 use super::UserAuth;
-use crate::misc::auth::{issue_jwt, UserType};
-
-// login credentials wrapper
-#[derive(Deserialize, Serialize, Debug)]
-pub struct UserAuthCredsDTO {
-    pub email: String,
-    pub pwd: String,
-}
+use crate::{dto::UserAuthCredsDTO, misc::auth::{issue_jwt, UserDetails, UserType}};
 
 /// result from db -> dont include pwd
 #[derive(Deserialize, Serialize, Debug)]
@@ -46,7 +39,7 @@ impl UserAuth {
                 false
             });
             if is_valid {
-                let res = issue_jwt(jwt_key, UserType::Student(uid), 5).map_or(None, |v| Some(v));
+                let res = issue_jwt(jwt_key, UserDetails{uid,user_type:UserType::Student}, 5).map_or(None, |v| Some(v));
                 Ok(res)
             } else {
                 // Ok(None)

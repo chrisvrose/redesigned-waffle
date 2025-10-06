@@ -75,23 +75,23 @@ impl UserAuth {
                 user.semester,
                 user.deptid
             )
-            .fetch_one(&mut tx)
+            .fetch_one(&mut *tx)
             .await?;
 
         // only after inserting the user, actually generate a password. Otherwise, not worth the effort of hashing
 
         let cfg = argon2_config::get_config();
         let hashed_pwd = argon2::hash_encoded(pwdref.as_bytes(), salt.as_bytes(), &cfg).unwrap();
-        
+
         // get this data type
         let inserteduid = response.uid;
-        
+
         query!(
             "update userauth set pwd=$1 where uid=$2",
             hashed_pwd,
             inserteduid
         )
-        .execute(&mut tx)
+        .execute(&mut *tx)
         .await?;
 
         tx.commit().await?;
