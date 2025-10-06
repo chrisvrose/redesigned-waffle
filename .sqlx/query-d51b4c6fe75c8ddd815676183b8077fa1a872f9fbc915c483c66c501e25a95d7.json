@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update userauth set pwd=$1 where uid=$2",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "d51b4c6fe75c8ddd815676183b8077fa1a872f9fbc915c483c66c501e25a95d7"
+}

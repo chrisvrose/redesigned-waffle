@@ -1,0 +1,50 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select * from subject",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "coursecode",
+        "type_info": "Bpchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "semester",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 3,
+        "name": "isglobal",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 4,
+        "name": "deptid",
+        "type_info": "Bpchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "maxcapacity",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "df9828f222d1ce39679c19d9a74a5eb21a7d0b55f14a2aa58d8ad56506b4678e"
+}

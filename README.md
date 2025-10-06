@@ -10,6 +10,7 @@
 ### Getting it up
 
 Follow the steps below in the given order.
+
 #### Getting the db on
 
 1. Set the env variables Look at [the environment variables section](#environment-variables); Place it in a `.env` file.

@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into book values($1,$2)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Bpchar"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "33721ba9c4bff2e1ee13646fa4fb9a36b99c5faa318754af6b5f3da05583dac5"
+}

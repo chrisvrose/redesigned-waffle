@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "Select uid from userauth where email=$1::varchar(64)",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "uid",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Varchar"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "0b2563bef26b5834c27325ebb0ef59d902d7c688ae9837bff4603ad29c971ca0"
+}

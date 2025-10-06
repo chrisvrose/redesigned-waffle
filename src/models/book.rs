@@ -1,63 +1,93 @@
-use serde::{Serialize, Deserialize};
-use sqlx::{PgPool, query, query_as};
+use serde::{Deserialize, Serialize};
+use sqlx::{query, query_as, PgPool};
 
-
-
-#[derive(Serialize,Deserialize,Debug)]
-pub struct Booking{
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Booking {
     pub uid: i32,
     pub insert_time: chrono::DateTime<chrono::Utc>,
-    pub course_code: String
+    pub course_code: String,
 }
-impl Booking{
-    pub async fn to_external(self:Self, db:&PgPool)->Result<BookingPresentation,sqlx::Error>{
-        let Booking { uid, course_code,insert_time } = self;
+impl Booking {
+    pub async fn to_external(self: Self, db: &PgPool) -> Result<BookingPresentation, sqlx::Error> {
+        let Booking {
+            uid,
+            course_code,
+            insert_time,
+        } = self;
 
-        let ans = query!("Select email from userauth where uid=$1",uid).fetch_one(db).await?;
+        let ans = query!("Select email from userauth where uid=$1", uid)
+            .fetch_one(db)
+            .await?;
         let email = ans.email;
 
-        Ok(BookingPresentation{
+        Ok(BookingPresentation {
             email,
-            course_code,insert_time
+            course_code,
+            insert_time,
         })
     }
-    pub async fn get_all(db:&PgPool)->Result<Vec<Booking>,sqlx::Error>{
-        let ans = query_as!(Booking,"select uid,coursecode as course_code,insert_time from book").fetch_all(db).await?;
+    pub async fn get_all(db: &PgPool) -> Result<Vec<Booking>, sqlx::Error> {
+        let ans = query_as!(
+            Booking,
+            "select uid,coursecode as course_code,insert_time from book"
+        )
+        .fetch_all(db)
+        .await?;
         Ok(ans)
     }
-    pub async fn get_user(uid:i32,db:&PgPool)->Result<Vec<Booking>,sqlx::Error>{
-        let ans = query_as!(Booking,"select uid,coursecode as course_code,insert_time from book where uid=$1",uid).fetch_all(db).await?;
+    pub async fn get_user(uid: i32, db: &PgPool) -> Result<Vec<Booking>, sqlx::Error> {
+        let ans = query_as!(
+            Booking,
+            "select uid,coursecode as course_code,insert_time from book where uid=$1",
+            uid
+        )
+        .fetch_all(db)
+        .await?;
         Ok(ans)
     }
     /// make a booking for a user
-    pub async fn make_user(uid:i32, course_code:String,db:&PgPool)->Result<(),sqlx::Error>{
-        query!("insert into book values($1,$2)",uid,course_code).execute(db).await?;
+    pub async fn make_user(uid: i32, course_code: String, db: &PgPool) -> Result<(), sqlx::Error> {
+        query!("insert into book values($1,$2)", uid, course_code)
+            .execute(db)
+            .await?;
         Ok(())
     }
-    pub async fn clear_user(uid:i32,course_code:String,db:&PgPool)->Result<(),sqlx::Error>{
-        query!("delete from book where uid=$1",uid).execute(db).await?;
+    pub async fn clear_user(uid: i32, course_code: String, db: &PgPool) -> Result<(), sqlx::Error> {
+        query!("delete from book where uid=$1", uid)
+            .execute(db)
+            .await?;
         Ok(())
     }
 }
 
-#[derive(Serialize,Deserialize,Debug)]
-pub struct BookingPresentation{
-    pub email:String,
-    pub course_code:String,
+#[derive(Serialize, Deserialize, Debug)]
+pub struct BookingPresentation {
+    pub email: String,
+    pub course_code: String,
     pub insert_time: chrono::DateTime<chrono::Utc>,
 }
 
-impl BookingPresentation{
+impl BookingPresentation {
     /// get internal representation of booking
-    pub async fn to_internal(self:Self,db:&PgPool)->Result<Booking,sqlx::Error>{
-        let BookingPresentation {course_code,email,insert_time} = self;
+    pub async fn to_internal(self: Self, db: &PgPool) -> Result<Booking, sqlx::Error> {
+        let BookingPresentation {
+            course_code,
+            email,
+            insert_time,
+        } = self;
 
-        let uidres = query!("Select uid from userauth where email=$1::varchar(64)",email).fetch_one(db).await?;
+        let uidres = query!(
+            "Select uid from userauth where email=$1::varchar(64)",
+            email
+        )
+        .fetch_one(db)
+        .await?;
         let uid = uidres.uid;
 
-        Ok(Booking{
+        Ok(Booking {
             uid,
-            course_code,insert_time
+            course_code,
+            insert_time,
         })
     }
 }
