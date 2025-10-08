@@ -1,4 +1,4 @@
-use actix_web::web::ServiceConfig;
+use actix_web::{get, web::ServiceConfig, Responder};
 
 mod auth;
 mod book;
@@ -7,10 +7,16 @@ mod subject;
 mod up;
 mod userauth;
 
+#[get("/")]
+pub async fn hello_world() -> impl Responder{
+    "redesigned-waffle"
+}
+
 /// Function that adds the routes
 pub fn init(service_config: &mut ServiceConfig) {
     // add the up route
     service_config
+        .service(hello_world)
         .service(actix_web::web::scope("/up").service(up::up))
         // add the subject routes
         .service(
@@ -25,7 +31,7 @@ pub fn init(service_config: &mut ServiceConfig) {
                 .service(userauth::get_all)
                 .service(userauth::add_user),
         )
-        .service(actix_web::web::scope("/auth").service(auth::login_student))
+        .service(actix_web::web::scope("/auth").service(auth::login))
         .service(actix_web::web::scope("/dept").service(dept::get_all))
         .service(
             actix_web::web::scope("/book")

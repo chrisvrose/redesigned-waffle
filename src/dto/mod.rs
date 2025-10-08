@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-
+pub mod userauth;
 // login credentials wrapper
 #[derive(Deserialize, Serialize, Debug)]
 pub struct UserAuthCredsDTO {

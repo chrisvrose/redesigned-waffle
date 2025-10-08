@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 use sqlx::{query, query_as, Error as SqlxError, PgPool};
 
 use crate::misc::argon2_config;
+use crate::dto::userauth::OutUserDTO;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct NewUserDTO {
@@ -13,15 +14,7 @@ pub struct NewUserDTO {
     pub deptid: String,
 }
 
-/// Outfacing user -> Missing pwd
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct OutUserDTO {
-    pub uid: i32,
-    pub name: String,
-    pub email: String,
-    pub semester: i32,
-    pub deptid: String,
-}
+
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct UserAuth {
@@ -29,7 +22,7 @@ pub struct UserAuth {
     pub name: String,
     pub email: String,
     pub pwd: String,
-    pub semester: i32,
+    pub semester: Option<i32>,
     pub deptid: String,
 }
 
