@@ -12,11 +12,12 @@ pub async fn hello_world() -> impl Responder{
     "redesigned-waffle"
 }
 
+
 /// Function that adds the routes
 pub fn init(service_config: &mut ServiceConfig) {
     // add the up route
     service_config
-        .service(hello_world)
+        // .service(hello_world)
         .service(actix_web::web::scope("/up").service(up::up))
         // add the subject routes
         .service(
@@ -38,5 +39,6 @@ pub fn init(service_config: &mut ServiceConfig) {
                 .service(book::get_user)
                 .service(book::make_booking)
                 .service(book::get_calc)
-        );
+        )
+        .service(actix_files::Files::new("/","./static").index_file("index.html"));
 }
