@@ -13,6 +13,22 @@ pub enum UserType {
     Admin,
     Student,
 }
+impl Into<i32> for UserType{
+    fn into(self) -> i32 {
+        match self {
+            UserType::Admin => 0,
+            UserType::Student => 1,
+        }
+    }
+}
+impl From<i32> for UserType{
+    fn from(value: i32) -> Self {
+        match value {
+            0=>Self::Admin,
+            _=>Self::Student
+        }
+    }
+}
 
 /// parts of the authtoken we are concerned about
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Clone, Copy)]

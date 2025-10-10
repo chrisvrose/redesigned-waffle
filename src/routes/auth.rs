@@ -4,7 +4,6 @@ use actix_web::{
     web::{self, Data},
     Responder,
 };
-use serde_json::json;
 
 use crate::dto::UserAuthCredsDTO;
 use crate::misc::AppData;
@@ -15,7 +14,7 @@ async fn login(appdata: Data<AppData>, logincreds: web::Json<UserAuthCredsDTO>) 
     let dbpool = &(appdata.as_ref().pool);
     let jwt_key = &(appdata.as_ref().jwt_secret);
 
-    let jwt_option_result = UserAuth::login_student(&logincreds, dbpool, jwt_key).await;
+    let jwt_option_result = UserAuth::login(&logincreds, dbpool, jwt_key).await;
 
     jwt_option_result.map_or_else(
         |_x| HttpResponse::Forbidden().body(""),

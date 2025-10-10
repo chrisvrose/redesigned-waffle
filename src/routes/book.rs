@@ -5,18 +5,20 @@ use crate::{dto::NewBookDTO, misc::{auth::{UserDetails, UserType}, AppData}, mod
 
 #[post("")]
 pub async fn make_booking(appdata:Data<AppData>,exts:Option<ReqData<UserDetails>>,body:actix_web::web::Json<NewBookDTO>)-> impl Responder{
-    if let Some(user_details) = exts{
+    
+    
+    if let Some(user_details) = exts {
         let UserDetails { uid, user_type } = user_details.into_inner();
         if let UserType::Student = user_type {
-            let db =& appdata.pool;
-            let resp = body.into_inner();
-            if let Ok(_) = Booking::make_user(uid, resp.course_code, db).await{
-                HttpResponse::Ok().json(serde_json::json!({"ok":true}))
+            let db = &appdata.pool;
+            let request_body_dto = body.into_inner();
+            if let Ok(()) = Booking::make_user(uid, request_body_dto.course_code, db).await{
+                HttpResponse::Ok().body("")
             }else{
-                HttpResponse::BadRequest().json(serde_json::json!({"ok":false}))
+                HttpResponse::BadRequest().body("")
             }
         }else{
-            HttpResponse::NotFound().json(serde_json::json!({"ok":false}))
+            HttpResponse::NotFound().body("")
         }
     }else{
         HttpResponse::NotFound().json(serde_json::json!({"ok":false,"reason":"No auth"}))

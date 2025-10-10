@@ -91,10 +91,4 @@ impl UserAuth {
 
         Ok(inserteduid)
     }
-
-    // pub async fn remove_user(uid:&i32,db:&PgPool)->Result<u64,SqlxError> {
-    //     let x = query!("delete from userauth where uid=$1",uid).execute(db).await?;
-
-    //     Ok(x.rows_affected())
-    // }
 }

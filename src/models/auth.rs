@@ -12,23 +12,25 @@ struct UserAuthCredsUid {
     pub uid: i32,
     pub email: String,
     pub pwd: String,
+    pub role: UserType
 }
 
+
 impl UserAuth {
-    pub async fn login_student(
+    pub async fn login(
         x: &UserAuthCredsDTO,
         dbpool: &PgPool,
         jwt_key: &String,
     ) -> Result<Option<String>, sqlx::Error> {
         let resultrow = query_as!(
             UserAuthCredsUid,
-            "SELECT uid,email,pwd from userauth where email=$1::varchar(64)",
+            "SELECT uid,email,pwd,role from userauth where email=$1::varchar(64)",
             x.email
         )
         .fetch_optional(dbpool)
         .await?;
 
-        if let Some(UserAuthCredsUid { pwd, uid, .. }) = resultrow {
+        if let Some(UserAuthCredsUid { pwd, uid,role, .. }) = resultrow {
 
             let is_valid = argon2::verify_encoded(
                 pwd.as_str(),
@@ -39,7 +41,8 @@ impl UserAuth {
                 false
             });
             if is_valid {
-                let res = issue_jwt(jwt_key, UserDetails{uid,user_type:UserType::Student}, 5).map_or(None, |v| Some(v));
+                const DEFAULT_JWT_EXPIRY_DAYS: u8 = 5;
+                let res = issue_jwt(jwt_key, UserDetails{ uid,user_type:role}, DEFAULT_JWT_EXPIRY_DAYS).map_or(None, |v| Some(v));
                 Ok(res)
             } else {
                 // Ok(None)
