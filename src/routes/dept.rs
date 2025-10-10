@@ -1,16 +1,14 @@
 use actix_web::HttpResponse;
-use actix_web::{web::Data, Responder,get};
+use actix_web::{web::Data, get};
 
+use crate::errors::response::ResponseErrors;
 use crate::misc::AppData;
 use crate::models::Dept;
 
 
 #[get("")]
-pub async fn get_all(appdata:Data<AppData>)->impl Responder{
+pub async fn get_all(appdata:Data<AppData>)->Result<HttpResponse,ResponseErrors>{
     let db = & appdata.as_ref().pool;
-    let data = Dept::get_all(db).await;
-    match data{
-        Ok(res)=>HttpResponse::Ok().json(res),
-        _=>HttpResponse::InternalServerError().body("")
-    }
+    let data = Dept::get_all(db).await?;
+    Ok(HttpResponse::Ok().json(data))
 }

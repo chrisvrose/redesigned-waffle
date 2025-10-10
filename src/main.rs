@@ -3,7 +3,7 @@ use dotenv::dotenv;
 
 use log::{debug, trace};
 use misc::{middleware::jwt_authentication, AppData};
-use sqlx::{self, PgPool};
+use sqlx::PgPool;
 
 use crate::misc::env::AppConfigVariables;
 
@@ -11,6 +11,7 @@ mod dto;
 mod misc;
 mod models;
 mod routes;
+mod errors;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -30,6 +31,7 @@ async fn main() -> std::io::Result<()> {
     let pool = PgPool::connect(&database_url)
         .await
         .expect("Could not connect");
+
     debug!("Got DB Connection, trying to start server");
 
     HttpServer::new(move || {

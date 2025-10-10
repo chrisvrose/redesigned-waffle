@@ -1,9 +1,11 @@
-use serde::Serialize;
 use sqlx::PgPool;
 pub mod middleware;
 pub mod auth;
 pub mod argon2_config;
 pub mod env;
+
+
+
 pub struct AppData {
     pub salt_secret: String,
     pub jwt_secret:String,
@@ -14,17 +16,5 @@ impl AppData{
         AppData{
             salt_secret,jwt_secret,pool
         }
-    }
-}
-
-
-#[derive(Serialize)]
-pub struct JsonResponse<T> {
-    pub ok: bool,
-    pub response: T,
-}
-impl<T> JsonResponse<T> {
-    pub fn new(ok: bool, response: T) -> JsonResponse<T> {
-        JsonResponse { ok, response }
     }
 }

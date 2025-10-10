@@ -9,6 +9,7 @@ actix-files = "0.6.8"
 actix-web = "4"
 # For timestamp
 chrono = { version = "0.4.42", features = ["serde"] }
+derive_more = "2.0.1"
 # Env variables
 dotenv = "0.15.0"
 # Future related helpers

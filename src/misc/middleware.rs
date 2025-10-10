@@ -3,6 +3,8 @@ use crate::misc::auth::AuthTokenData;
 use super::auth::validate_jwt;
 use actix_web::{dev::ServiceRequest, HttpMessage};
 use log::trace;
+
+
 /// Insert authenticator details
 pub fn jwt_authentication(req: &ServiceRequest, jwt_secret_for_middleware: &String) {
     trace!("HTTP request on {}",req.path());

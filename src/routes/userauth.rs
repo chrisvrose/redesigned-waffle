@@ -1,29 +1,22 @@
 use crate::{
-    misc::AppData,
-    models::{NewUserDTO, UserAuth},
+    errors::response::ResponseErrors, misc::AppData, models::{NewUserDTO, UserAuth}
 };
-use actix_web::{get, post, web::Data, HttpResponse, Responder};
+use actix_web::{get, post, web::Data, HttpResponse};
 
 #[get("")]
-pub async fn get_all(appstate: Data<AppData>) -> impl Responder {
+pub async fn get_all(appstate: Data<AppData>) -> Result<HttpResponse,ResponseErrors> {
     let dbpool = &appstate.as_ref().pool;
-    let resp = UserAuth::get_all(dbpool).await;
-    match resp {
-        Ok(users) => HttpResponse::Ok().json(users),
-        Err(_) => HttpResponse::InternalServerError().body(""),
-    }
+    let resp = UserAuth::get_all(dbpool).await?;
+    Ok(HttpResponse::Ok().json(resp))
 }
 
 #[post("")]
 pub async fn add_user(
     user: actix_web::web::Json<NewUserDTO>,
     appdata: Data<AppData>,
-) -> impl Responder {
+) -> Result<HttpResponse,ResponseErrors> {
     let dbpool = &appdata.as_ref().pool;
     let salt = &appdata.as_ref().salt_secret;
-    let resp = UserAuth::add_user(&user, dbpool, salt).await;
-    match resp {
-        Ok(addedid) => HttpResponse::Ok().json(addedid),
-        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
-    }
+    let addedid = UserAuth::add_user(&user, dbpool, salt).await?;
+    Ok(HttpResponse::Ok().json(addedid))
 }

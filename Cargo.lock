@@ -619,6 +619,7 @@ dependencies = [
  "actix-files",
  "actix-web",
  "chrono",
+ "derive_more",
  "dotenv",
  "futures",
  "jsonwebtoken",
