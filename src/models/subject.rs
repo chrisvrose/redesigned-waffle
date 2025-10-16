@@ -19,19 +19,20 @@ impl Subject {
     }
 
     pub async fn get_for_user(id: &i32, db: &PgPool) -> Result<Vec<Subject>, sqlx::error::Error> {
-        let resp = query_as!(Subject,"select subject.* from subject,userauth where userauth.uid=$1 and userauth.semester=subject.semester and ((subject.isglobal and userauth.deptid!=subject.deptid) or (not(subject.isglobal) and userauth.deptid=subject.deptid))",id).fetch_all(db).await?;
-
-        Ok(resp)
+        let resp = query_as!(Subject,"select subject.* from subject,userauth where userauth.uid=$1 and userauth.semester=subject.semester and ((subject.isglobal and userauth.deptid!=subject.deptid) or (not(subject.isglobal) and userauth.deptid=subject.deptid))",id)
+                    .fetch_all(db)
+                    .await;
+        resp
     }
 
     pub async fn get_one(
         id: &String,
         db: &Pool<Postgres>,
     ) -> Result<Option<Subject>, sqlx::error::Error> {
-        let resp = query_as!(Subject, "Select * from subject where coursecode=$1", id)
+        let resp = query_as!(Subject, "select * from subject where coursecode=$1", id)
             .fetch_optional(db)
-            .await?;
-        Ok(resp)
+            .await;
+        resp
     }
 
     // pub async fn insert(data: &Subject, db: &Pool<Postgres>) -> Result<u64, sqlx::error::Error> {
@@ -65,7 +66,7 @@ impl Subject {
         let mut inserted_ids: Vec<String> = Vec::new();
         for subject in subjects {
             let resp = query!(
-                r#"INSERT INTO subject values ($1,$2,$3,$4,$5,$6) returning coursecode"#,
+                "INSERT INTO subject values ($1,$2,$3,$4,$5,$6) returning coursecode",
                 subject.coursecode,
                 subject.name,
                 subject.semester,

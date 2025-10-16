@@ -11,7 +11,9 @@ pub enum ResponseErrors {
     #[display("Huh? {_0}")]
     InternalServerErrorWithMessage(String),
     #[display("Bad Request: {_0}")]
-    BadRequest(String)
+    BadRequest(String),
+    #[display("Not found")]
+    NotFound
 }
 
 impl From<sqlx::Error> for ResponseErrors{
@@ -27,6 +29,7 @@ impl ResponseError for ResponseErrors {
             ResponseErrors::InternalServerError => StatusCode::INTERNAL_SERVER_ERROR,
             ResponseErrors::InternalServerErrorWithMessage(_) => StatusCode::INTERNAL_SERVER_ERROR,
             ResponseErrors::BadRequest(_) => StatusCode::BAD_REQUEST,
+            ResponseErrors::NotFound => StatusCode::NOT_FOUND
         }
     }
 }

@@ -1,15 +1,15 @@
 use actix_web::{
-    get, post,
-    web::{self, Data},
-    HttpResponse, Responder,
+    get, post, web::{self, Data, Json}, HttpResponse, Responder
 };
 use log::error;
 use sqlx::Error;
 
 use crate::{
+    errors::response::ResponseErrors,
     misc::{
-        auth::{UserDetails, UserType},
         AppData,
+        auth::{UserDetails, UserType},
+        middleware::assert_role_auth,
     },
     models::Subject,
 };
@@ -35,30 +35,16 @@ pub async fn get_all_subs(appdata: Data<AppData>) -> impl Responder {
 pub async fn get_user_subs(
     user_details_opt: Option<web::ReqData<UserDetails>>,
     appdata: Data<AppData>,
-) -> impl Responder {
+) -> Result<web::Json<Vec<Subject>>, ResponseErrors> {
     let dbpool = &appdata.as_ref().pool;
+    let UserDetails { uid, user_type } = assert_role_auth(user_details_opt, None)?;
 
-    match user_details_opt {
-        Some(usertype) => {
-            let UserDetails { uid, user_type } = usertype.into_inner();
-            let subjects_list_results = match user_type {
-                UserType::Student => {
-                    Subject::get_for_user(&uid, dbpool).await
-                }
-                UserType::Admin => {
-                    Subject::get_all(dbpool).await
-                }
-            };
-            if let Ok(vals) = subjects_list_results {
-                HttpResponse::Ok().json(vals)
-            } else {
-                HttpResponse::NotFound()
-                    .json(serde_json::json!({"message":"Could not get records"}))
-            }
-        }
-        None => HttpResponse::Forbidden()
-            .json(serde_json::json!({"message":"Not a valid user"})),
-    }
+    // let = user_details;
+    let subjects_list_results = match user_type {
+        UserType::Student => Subject::get_for_user(&uid, dbpool).await,
+        UserType::Admin => Subject::get_all(dbpool).await,
+    }?;
+    Ok(web::Json(subjects_list_results))
 }
 
 #[post("")]

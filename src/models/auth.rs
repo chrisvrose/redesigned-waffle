@@ -1,4 +1,4 @@
-use log::debug;
+use log::{debug, warn};
 use serde::{Deserialize, Serialize};
 use sqlx::{query_as, Error, PgPool};
 
@@ -37,7 +37,7 @@ impl UserAuth {
                 x.pwd.as_bytes(),
             );
             let is_valid = is_valid.unwrap_or_else(|x| {
-                debug!("The user was not valid! {:?}", x);
+                warn!("The user was not valid! {:?}", x);
                 false
             });
             if is_valid {

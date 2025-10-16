@@ -15,7 +15,7 @@ impl Booking {
             insert_time,
         } = self;
 
-        let ans = query!("Select email from userauth where uid=$1", uid)
+        let ans = query!("select email from userauth where uid=$1", uid)
             .fetch_one(db)
             .await?;
         let email = ans.email;
