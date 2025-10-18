@@ -36,12 +36,12 @@ pub fn assert_role_auth(ext: Option<ReqData<UserDetails>>,role_expected:Option<U
                 if (user_type_got==expected_user_type){
                     Ok(user_details)
                 }else{
-                    Err(ResponseErrors::AccessDenied)
+                    Err(ResponseErrors::Forbidden)
                 }
             },
             None => Ok(user_details),
         }
     } else{
-        Err(ResponseErrors::AccessDenied)
+        Err(ResponseErrors::Unauthorized)
     }
 }
