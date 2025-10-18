@@ -46,7 +46,7 @@ impl Booking {
         Ok(ans)
     }
     /// make a booking for a user
-    pub async fn make_user(uid: i32, course_code: String, db: &PgPool) -> Result<(), sqlx::Error> {
+    pub async fn make_booking_for_user(uid: i32, course_code: String, db: &PgPool) -> Result<(), sqlx::Error> {
         query!("insert into book values($1,$2)", uid, course_code)
             .execute(db)
             .await?;

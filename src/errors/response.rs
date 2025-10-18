@@ -22,6 +22,8 @@ impl From<sqlx::Error> for ResponseErrors{
     }
 }
 
+pub type ResponseResult<T> = Result<T,ResponseErrors>;
+
 impl ResponseError for ResponseErrors {
     fn status_code(&self) -> StatusCode {
         match self {

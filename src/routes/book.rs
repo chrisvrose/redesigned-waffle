@@ -1,28 +1,15 @@
 use actix_web::{Responder, HttpResponse,get, web::{Data, ReqData}, post};
 
-use crate::{dto::NewBookDTO, misc::{auth::{UserDetails, UserType}, AppData}, models::Booking};
+use crate::{dto::NewBookDTO, errors::response::ResponseResult, misc::{auth::{UserDetails, UserType}, middleware::assert_role_auth, AppData}, models::Booking};
 
 
 #[post("")]
-pub async fn make_booking(appdata:Data<AppData>,exts:Option<ReqData<UserDetails>>,body:actix_web::web::Json<NewBookDTO>)-> impl Responder{
-    
-    
-    if let Some(user_details) = exts {
-        let UserDetails { uid, user_type } = user_details.into_inner();
-        if let UserType::Student = user_type {
-            let db = &appdata.pool;
-            let request_body_dto = body.into_inner();
-            if let Ok(()) = Booking::make_user(uid, request_body_dto.course_code, db).await{
-                HttpResponse::Ok().body("")
-            }else{
-                HttpResponse::BadRequest().body("")
-            }
-        }else{
-            HttpResponse::NotFound().body("")
-        }
-    }else{
-        HttpResponse::NotFound().json(serde_json::json!({"ok":false,"reason":"No auth"}))
-    }
+pub async fn make_booking(appdata:Data<AppData>,exts:Option<ReqData<UserDetails>>,body:actix_web::web::Json<NewBookDTO>)-> ResponseResult<HttpResponse>{
+    let UserDetails { uid, .. } = assert_role_auth(exts, Some(UserType::Student))?;
+    let db = &appdata.pool;
+    let request_body_dto = body.into_inner();
+    Booking::make_booking_for_user(uid, request_body_dto.course_code, db).await?;
+    Ok(HttpResponse::Ok().body(""))
 }
 
 
