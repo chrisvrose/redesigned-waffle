@@ -15,6 +15,7 @@ use crate::{
 };
 use serde_json::value::Value;
 
+// TODO fix this
 #[get("all")]
 pub async fn get_all_subs(appdata: Data<AppData>) -> impl Responder {
     let dbpool = &appdata.as_ref().pool;
@@ -29,6 +30,7 @@ pub async fn get_all_subs(appdata: Data<AppData>) -> impl Responder {
             .json(serde_json::json!({"ok":false,"reason":"Could not get records"}))
     }
 }
+
 
 /// show possible subs for user or all for teachers
 #[get("")]
@@ -47,6 +49,7 @@ pub async fn get_user_subs(
     Ok(web::Json(subjects_list_results))
 }
 
+// TODO fix this
 #[post("")]
 pub async fn add_subs(data: web::Json<Vec<Subject>>, appdata: Data<AppData>) -> impl Responder {
     let dbpool = &appdata.as_ref().pool;
@@ -67,6 +70,8 @@ pub async fn add_subs(data: web::Json<Vec<Subject>>, appdata: Data<AppData>) -> 
         }
     }
 }
+
+// TODO fix
 #[get("/{id}")]
 pub async fn get_one(id: web::Path<String>, appdata: Data<AppData>) -> impl Responder {
     let dbpool = &appdata.as_ref().pool;
