@@ -5,30 +5,20 @@ use log::error;
 use sqlx::Error;
 
 use crate::{
-    errors::response::ResponseErrors,
+    errors::response::{ResponseErrors, ResponseResult},
     misc::{
-        AppData,
-        auth::{UserDetails, UserType},
-        middleware::assert_role_auth,
+        auth::{UserDetails, UserType}, middleware::assert_role_auth, AppData
     },
     models::Subject,
 };
-use serde_json::value::Value;
+use serde_json::{json, value::Value};
 
-// TODO fix this
 #[get("all")]
-pub async fn get_all_subs(appdata: Data<AppData>) -> impl Responder {
+pub async fn get_all_subs(appdata: Data<AppData>) -> ResponseResult<web::Json<Vec<Subject>>> {
     let dbpool = &appdata.as_ref().pool;
 
-    // let mut x = HttpResponse::Ok();
-
-    let vals = Subject::get_all(dbpool).await;
-    if let Ok(vals) = vals {
-        HttpResponse::Ok().json(vals)
-    } else {
-        HttpResponse::NotFound()
-            .json(serde_json::json!({"ok":false,"reason":"Could not get records"}))
-    }
+    let vals = Subject::get_all(dbpool).await?;
+    Ok(web::Json(vals))
 }
 
 
@@ -49,7 +39,6 @@ pub async fn get_user_subs(
     Ok(web::Json(subjects_list_results))
 }
 
-// TODO fix this
 #[post("")]
 pub async fn add_subs(data: web::Json<Vec<Subject>>, appdata: Data<AppData>) -> impl Responder {
     let dbpool = &appdata.as_ref().pool;
@@ -71,17 +60,16 @@ pub async fn add_subs(data: web::Json<Vec<Subject>>, appdata: Data<AppData>) -> 
     }
 }
 
-// TODO fix
 #[get("/{id}")]
-pub async fn get_one(id: web::Path<String>, appdata: Data<AppData>) -> impl Responder {
+pub async fn get_one(id: web::Path<String>, appdata: Data<AppData>) -> ResponseResult<HttpResponse> {
     let dbpool = &appdata.as_ref().pool;
 
     let str = id.into_inner();
     log::trace!("Attempting to fetch course code {}", str);
-    let vals = Subject::get_one(&str, dbpool).await;
-    match vals {
-        Ok(Some(x)) => HttpResponse::Ok().json(x),
-        Ok(None) => HttpResponse::NotFound().json(Value::Null),
-        _ => HttpResponse::InternalServerError().json(Value::Null),
-    }
+    let vals = Subject::get_one(&str, dbpool).await?;
+    let response = match vals {
+        Some(x) => HttpResponse::Ok().json(x),
+        None => HttpResponse::NotFound().json(Value::Null),
+    };
+    Ok(response)
 }
