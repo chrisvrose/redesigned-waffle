@@ -28,6 +28,10 @@ Follow the steps below in the given order.
    cargo build --release
    ```
 3. Your executable will be present in the `target/release` directory.
+4. (Optional) Build a godawful build using:
+   ```sh
+   RUSTFLAGS="-C target-cpu=native" cargo build --profile release-speed
+   ```
 
 
 Note:

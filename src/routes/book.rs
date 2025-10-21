@@ -14,34 +14,15 @@ pub async fn make_booking(appdata:Data<AppData>,exts:Option<ReqData<UserDetails>
 
 
 #[get("")]
-pub async fn get_user(appdata:Data<AppData>,userdata_opt:Option<ReqData<UserDetails>>)->impl Responder{
+pub async fn get_user(appdata:Data<AppData>,userdetails_request_data:Option<ReqData<UserDetails>>)->ResponseResult<HttpResponse> {
     let db = &appdata.pool;
-    match userdata_opt {
-        Some(userdata)=>{
-            let UserDetails { uid, user_type } = userdata.into_inner();
-            if let UserType::Student = user_type {
-                let bookings = Booking::get_user(uid, db).await;
-                match bookings {
-                    Ok(ans)=>{
-                        HttpResponse::Ok().json(ans)
-                    },
-                    _=>{
-                        HttpResponse::NotFound().json(serde_json::json!({"ok":false}))
-                    }
-                }
-            }else{
-                HttpResponse::NotAcceptable().json(serde_json::json!({"ok":false}))
-            }
-        },
-        None=>{
-            HttpResponse::Unauthorized().json(serde_json::json!({"ok":false}))
-        }
-    }
+    let UserDetails { uid, .. } = assert_role_auth(userdetails_request_data, Some(UserType::Student))?;
+    let bookings = Booking::get_user(uid, db).await?;
+    Ok(HttpResponse::Ok().json(bookings))
 }
 
 // todo only for service accounts
 #[get("/calc")]
 pub async fn get_calc(_appdata:Data<AppData>)->impl Responder{
-
     HttpResponse::NotAcceptable().json(serde_json::json!({"ok":false}))
 }
