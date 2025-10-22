@@ -1,6 +1,7 @@
 use jsonwebtoken::{DecodingKey, Validation, decode, encode, errors::Error as JWTError};
 use serde::{Deserialize, Serialize};
-use std::time::UNIX_EPOCH;
+use sqlx::{Encode, Postgres};
+use std::{default, time::UNIX_EPOCH};
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Clone, Copy)]
 
@@ -8,19 +9,22 @@ pub struct UserDetails {
     pub uid: i32,
     pub user_type: UserType,
 }
-#[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Clone, Copy)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Clone, Copy, Default)]
 pub enum UserType {
     Admin,
+    #[default]
     Student,
 }
-impl Into<i32> for UserType{
-    fn into(self) -> i32 {
-        match self {
+
+impl From<UserType> for i32{
+    fn from(value: UserType) -> Self {
+        match value {
             UserType::Admin => 0,
             UserType::Student => 1,
         }
     }
 }
+
 impl From<i32> for UserType{
     fn from(value: i32) -> Self {
         match value {

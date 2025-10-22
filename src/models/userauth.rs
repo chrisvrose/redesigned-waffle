@@ -1,9 +1,13 @@
+use actix_web::ResponseError;
+use futures::join;
 use log::debug;
 use serde::{Deserialize, Serialize};
 use sqlx::{query, query_as, Error as SqlxError, PgPool};
 
-use crate::misc::argon2_config;
+use crate::errors::response::ResponseErrors;
+use crate::misc::argon2_config::hash_password_with_config;
 use crate::dto::userauth::OutUserDTO;
+use crate::misc::auth::UserType;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct NewUserDTO {
@@ -12,6 +16,7 @@ pub struct NewUserDTO {
     pub pwd: String,
     pub semester: i32,
     pub deptid: String,
+    pub role: Option<UserType>
 }
 
 
@@ -52,7 +57,7 @@ impl UserAuth {
         user: &NewUserDTO,
         db: &PgPool,
         salt: &String,
-    ) -> Result<i32, SqlxError> {
+    ) -> Result<i32, ResponseErrors> {
         debug!("Attempting to add user for {}", user.email);
 
 
@@ -60,21 +65,22 @@ impl UserAuth {
         let pwdref = &(user.pwd);
 
         let response = query!(
-                "INSERT INTO userauth(name,email,pwd,semester,deptid) values($1,$2,$3,$4,$5) returning uid",
+                "INSERT INTO userauth(name,email,pwd,semester,deptid,role) values($1,$2,$3,$4,$5,$6) returning uid",
                 user.name,
                 user.email,
                 // put blank password first, refer below
                 "",
                 user.semester,
-                user.deptid
+                user.deptid,
+                i32::from(user.role.unwrap_or_default())
             )
             .fetch_one(&mut *tx)
-            .await?;
+            .await?
+            ;
 
         // only after inserting the user, actually generate a password. Otherwise, not worth the effort of hashing
+        let hashed_pwd = hash_password_with_config(pwdref, salt)?;
 
-        let cfg = argon2_config::get_config();
-        let hashed_pwd = argon2::hash_encoded(pwdref.as_bytes(), salt.as_bytes(), &cfg).unwrap();
 
         // get this data type
         let inserteduid = response.uid;
