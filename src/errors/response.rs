@@ -1,7 +1,7 @@
 use actix_web::ResponseError;
 use actix_web::http::StatusCode;
 use derive_more::Display;
-use log::{error, info, warn};
+use log::error;
 
 #[derive(Debug, Display)]
 pub enum ResponseErrors {
@@ -18,13 +18,17 @@ pub enum ResponseErrors {
 }
 
 impl From<sqlx::Error> for ResponseErrors {
-    fn from(_value: sqlx::Error) -> Self {
-        error!("SQLx error {}", _value);
-        ResponseErrors::InternalServerError
+    fn from(value: sqlx::Error) -> Self {
+        error!("SQLx error {}", value);
+        match value{
+            sqlx::Error::RowNotFound => ResponseErrors::NotFound,
+            _ => ResponseErrors::InternalServerError,
+        }
     }
 }
 impl From<argon2::Error> for ResponseErrors {
     fn from(value: argon2::Error) -> Self {
+        error!("Argon2 error encountered {:?}",value);
         match value {
             argon2::Error::PwdTooShort | argon2::Error::PwdTooLong => {
                 ResponseErrors::BadRequest("Invalid password")
@@ -32,6 +36,11 @@ impl From<argon2::Error> for ResponseErrors {
             argon2::Error::DecodingFail => ResponseErrors::Forbidden,
             _ => ResponseErrors::InternalServerError,
         }
+    }
+}
+impl From<jsonwebtoken::errors::Error> for ResponseErrors{
+    fn from(value: jsonwebtoken::errors::Error) -> Self {
+        ResponseErrors::InternalServerError
     }
 }
 
