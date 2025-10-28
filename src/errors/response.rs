@@ -3,7 +3,7 @@ use actix_web::http::StatusCode;
 use derive_more::Display;
 use log::error;
 
-#[derive(Debug, Display)]
+#[derive(Debug, Display, PartialEq, Eq)]
 pub enum ResponseErrors {
     #[display("Not authorised")]
     Unauthorized,
