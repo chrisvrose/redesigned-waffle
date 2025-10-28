@@ -1,7 +1,6 @@
 use jsonwebtoken::{DecodingKey, Validation, decode, encode, errors::Error as JWTError};
 use serde::{Deserialize, Serialize};
-use sqlx::{Encode, Postgres};
-use std::{default, time::UNIX_EPOCH};
+use std::time::UNIX_EPOCH;
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Clone, Copy)]
 

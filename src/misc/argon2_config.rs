@@ -11,7 +11,6 @@ pub fn hash_password_with_config(pwdref: &String, salt: &str) -> Result<String> 
     argon2::hash_encoded(pwdref.as_bytes(), salt.as_bytes(), &cfg)
 }
 pub fn verify(hash: &str, password: &str) -> argon2::Result<bool> {
-    let cfg = argon2_config::get_config();
     argon2::verify_encoded(hash, password.as_bytes())
 }
 

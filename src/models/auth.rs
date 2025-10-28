@@ -1,6 +1,6 @@
-use log::{debug, error, warn};
+use log::warn;
 use serde::{Deserialize, Serialize};
-use sqlx::{query_as, Error, PgPool};
+use sqlx::{query_as, PgPool};
 
 use super::UserAuth;
 use crate::{dto::UserAuthCredsDTO, errors::response::ResponseErrors, misc::{argon2_config::verify, auth::{issue_jwt, UserDetails, UserType}}};

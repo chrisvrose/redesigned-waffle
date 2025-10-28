@@ -1,10 +1,10 @@
 use crate::{
-    dto::userauth::OutUserDTO, errors::response::ResponseResult, misc::{auth::UserDetails, middleware::assert_role_auth, AppData}, models::{NewUserDTO, UserAuth}
+    dto::userauth::OutUserDTO, errors::response::ResponseResult, misc::{auth::UserDetails, AppData}, models::{NewUserDTO, UserAuth}
 };
 use actix_web::{get, post, web::{self, Data, ReqData}, HttpResponse};
 
 #[get("")]
-pub async fn get_all(appstate: Data<AppData>,authdata:Option<ReqData<UserDetails>>) -> ResponseResult<web::Json<Vec<OutUserDTO>>> {
+pub async fn get_all(appstate: Data<AppData>,_authdata:Option<ReqData<UserDetails>>) -> ResponseResult<web::Json<Vec<OutUserDTO>>> {
     let dbpool = &appstate.as_ref().pool;
     // TODO - add this back
     // let _ = assert_role_auth(authdata, Some(crate::misc::auth::UserType::Admin))?;

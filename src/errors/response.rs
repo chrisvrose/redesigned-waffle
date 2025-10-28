@@ -1,7 +1,7 @@
 use actix_web::ResponseError;
 use actix_web::http::StatusCode;
 use derive_more::Display;
-use log::error;
+use log::{error, warn};
 
 #[derive(Debug, Display, PartialEq, Eq)]
 pub enum ResponseErrors {
@@ -39,7 +39,8 @@ impl From<argon2::Error> for ResponseErrors {
     }
 }
 impl From<jsonwebtoken::errors::Error> for ResponseErrors{
-    fn from(value: jsonwebtoken::errors::Error) -> Self {
+    fn from(error: jsonwebtoken::errors::Error) -> Self {
+        warn!("Encountered jwt error {:?}",error);
         ResponseErrors::InternalServerError
     }
 }

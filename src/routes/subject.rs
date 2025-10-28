@@ -1,5 +1,5 @@
 use actix_web::{
-    get, post, web::{self, Data, Json}, HttpResponse, Responder
+    get, post, web::{self, Data}, HttpResponse, Responder
 };
 use log::error;
 use sqlx::Error;
@@ -11,7 +11,7 @@ use crate::{
     },
     models::Subject,
 };
-use serde_json::{json, value::Value};
+use serde_json::value::Value;
 
 #[get("all")]
 pub async fn get_all_subs(appdata: Data<AppData>) -> ResponseResult<web::Json<Vec<Subject>>> {

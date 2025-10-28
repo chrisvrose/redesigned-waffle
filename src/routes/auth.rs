@@ -3,7 +3,7 @@ use actix_web::{
     Responder, post,
     web::{self, Data},
 };
-use log::{error, info};
+use log::info;
 
 use crate::dto::UserAuthCredsDTO;
 use crate::misc::AppData;
