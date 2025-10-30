@@ -5,11 +5,11 @@ use crate::{
 
 use super::auth::validate_jwt;
 use actix_web::{HttpMessage, dev::ServiceRequest, web::ReqData};
-use log::trace;
+use log::{trace, warn};
 
 /// Insert authenticator details
 pub fn jwt_authentication(req: &ServiceRequest, jwt_secret_for_middleware: &String) {
-    trace!("HTTP request on {}", req.path());
+    warn!("HTTP request on {}", req.path());
     let header = req.headers().get("Authorization");
     if let Some(header) = header {
         if let Ok(x) = header.to_str() {
@@ -22,9 +22,11 @@ pub fn jwt_authentication(req: &ServiceRequest, jwt_secret_for_middleware: &Stri
                     user_details: user, ..
                 }) = validate_jwt(jwt_secret_for_middleware, res)
                 {
-                    trace!("Got a valid token {} for uid {:?}", res, (user.uid));
+                    trace!("Got a valid token for uid {}", user.uid);
                     let mut exts = req.extensions_mut();
-                    exts.insert(user.uid);
+                    exts.insert(user);
+                } else {
+                    trace!("JWT illegal");
                 }
             }
         }
