@@ -1,10 +1,9 @@
+mod auth;
+mod book;
+mod dept;
 mod subject;
 mod userauth;
-mod auth;
-mod dept;
-mod book;
+pub use book::*;
+pub use dept::*;
 pub use subject::*;
 pub use userauth::*;
-pub use auth::*;
-pub use dept::*;
-pub use book::*;

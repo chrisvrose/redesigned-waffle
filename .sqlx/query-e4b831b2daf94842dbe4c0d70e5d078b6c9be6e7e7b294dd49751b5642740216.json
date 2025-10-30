@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "select uid,email,semester,name,deptid from userauth",
+  "query": "select uid,email,semester,name,deptid,role from userauth",
   "describe": {
     "columns": [
       {
@@ -27,6 +27,11 @@
         "ordinal": 4,
         "name": "deptid",
         "type_info": "Bpchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "role",
+        "type_info": "Int4"
       }
     ],
     "parameters": {
@@ -37,8 +42,9 @@
       false,
       true,
       false,
+      false,
       false
     ]
   },
-  "hash": "f6c0ba1686bf2112cfc385032c7203bffb639fd46009950065d5d7fe2b304461"
+  "hash": "e4b831b2daf94842dbe4c0d70e5d078b6c9be6e7e7b294dd49751b5642740216"
 }
