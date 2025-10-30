@@ -1,17 +1,17 @@
-use actix_web::{dev::Service, middleware::Logger, web::Data, App, HttpServer};
+use actix_web::{App, HttpServer, dev::Service, middleware::Logger, web::Data};
 use dotenv::dotenv;
 
 use log::{debug, trace};
-use misc::{middleware::jwt_authentication, AppData};
+use misc::{AppData, middleware::jwt_authentication};
 use sqlx::PgPool;
 
 use crate::misc::env::AppConfigVariables;
 
 mod dto;
+mod errors;
 mod misc;
 mod models;
 mod routes;
-mod errors;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -49,7 +49,7 @@ async fn main() -> std::io::Result<()> {
                 pool.clone(),
             )))
             // Create Logger
-            .wrap(Logger::default())
+            .wrap(Logger::default().log_level(log::Level::Trace))
             // add a set of routes
             .configure(crate::routes::init)
     })

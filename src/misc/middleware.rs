@@ -9,7 +9,7 @@ use log::{trace, warn};
 
 /// Insert authenticator details
 pub fn jwt_authentication(req: &ServiceRequest, jwt_secret_for_middleware: &String) {
-    warn!("HTTP request on {}", req.path());
+    trace!("HTTP request on {}", req.path());
     let header = req.headers().get("Authorization");
     if let Some(header) = header {
         if let Ok(x) = header.to_str() {
