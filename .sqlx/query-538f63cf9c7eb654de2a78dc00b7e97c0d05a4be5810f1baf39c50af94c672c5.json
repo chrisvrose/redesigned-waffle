@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "INSERT INTO userauth(name,email,pwd,semester,deptid) values($1,$2,$3,$4,$5) returning uid",
+  "query": "INSERT INTO userauth(name,email,pwd,semester,deptid,role) values($1,$2,$3,$4,$5,$6) returning uid",
   "describe": {
     "columns": [
       {
@@ -15,12 +15,13 @@
         "Varchar",
         "Varchar",
         "Int4",
-        "Bpchar"
+        "Bpchar",
+        "Int4"
       ]
     },
     "nullable": [
       false
     ]
   },
-  "hash": "df0cd0f83f55aaafdfda5036dc815d61236a7be314ddf3cbd736ba1bafea87e4"
+  "hash": "538f63cf9c7eb654de2a78dc00b7e97c0d05a4be5810f1baf39c50af94c672c5"
 }
