@@ -1,7 +1,11 @@
 use crate::{
     dto::userauth::OutUserDTO,
     errors::response::ResponseResult,
-    misc::{AppData, auth::UserDetails, middleware::assert_role_auth},
+    misc::{
+        AppData,
+        auth::{UserDetails, UserType},
+        middleware::assert_role_auth,
+    },
     models::{NewUserDTO, UserAuth},
 };
 use actix_web::{
@@ -16,7 +20,7 @@ pub async fn get_all(
 ) -> ResponseResult<web::Json<Vec<OutUserDTO>>> {
     let dbpool = &appstate.as_ref().pool;
     // TODO - add this back
-    let _ = assert_role_auth(authdata, None)?;
+    let _ = assert_role_auth(authdata, Some(UserType::Admin))?;
     let resp = UserAuth::get_all(dbpool).await?;
     Ok(web::Json(resp))
 }
