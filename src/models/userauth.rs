@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use sqlx::{Error as SqlxError, PgPool, query, query_as};
 
 use crate::dto::userauth::OutUserDTO;
-use crate::errors::response::ResponseErrors;
+use crate::errors::response::{ResponseErrors, ResponseResult};
 use crate::misc::argon2_config::hash_password_with_config;
 use crate::misc::auth::UserType;
 
@@ -81,5 +81,12 @@ impl UserAuth {
         tx.commit().await?;
 
         Ok(inserteduid)
+    }
+
+    pub async fn get_by_uid(db: &PgPool, uid: i32) -> ResponseResult<Option<UserAuth>> {
+        let res = query_as!(UserAuth, "select * from userauth where uid=$1", uid)
+            .fetch_optional(db)
+            .await?;
+        Ok(res)
     }
 }

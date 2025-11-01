@@ -1,4 +1,8 @@
-use actix_web::{App, HttpServer, dev::Service, middleware::Logger, web::Data};
+use actix_web::{
+    App, HttpServer,
+    middleware::{Logger, from_fn},
+    web::Data,
+};
 use dotenv::dotenv;
 
 use log::{debug, trace};
@@ -35,13 +39,10 @@ async fn main() -> std::io::Result<()> {
     debug!("Got DB Connection, trying to start server");
 
     HttpServer::new(move || {
-        let jwt_secret_for_middleware = jwt_secret.clone();
+        // let jwt_secret_for_middleware = jwt_secret.clone();
         App::new()
             // just inspect the authorization header and use it
-            .wrap_fn(move |req, srv| {
-                jwt_authentication(&req, &jwt_secret_for_middleware);
-                srv.call(req)
-            })
+            .wrap(from_fn(jwt_authentication))
             // insert app data
             .app_data(Data::new(AppData::new(
                 salt.clone(),

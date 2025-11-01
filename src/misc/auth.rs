@@ -2,12 +2,24 @@ use jsonwebtoken::{DecodingKey, Validation, decode, encode, errors::Error as JWT
 use serde::{Deserialize, Serialize};
 use std::time::UNIX_EPOCH;
 
+use crate::models::UserAuth;
+
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Clone, Copy)]
 
 pub struct UserDetails {
     pub uid: i32,
     pub user_type: UserType,
 }
+
+impl From<UserAuth> for UserDetails {
+    fn from(value: UserAuth) -> Self {
+        UserDetails {
+            uid: value.uid,
+            user_type: value.role,
+        }
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Clone, Copy, Default)]
 pub enum UserType {
     Admin,
@@ -15,7 +27,7 @@ pub enum UserType {
     Student,
 }
 
-impl From<UserType> for i32{
+impl From<UserType> for i32 {
     fn from(value: UserType) -> Self {
         match value {
             UserType::Admin => 0,
@@ -24,11 +36,11 @@ impl From<UserType> for i32{
     }
 }
 
-impl From<i32> for UserType{
+impl From<i32> for UserType {
     fn from(value: i32) -> Self {
         match value {
-            0=>Self::Admin,
-            _=>Self::Student
+            0 => Self::Admin,
+            _ => Self::Student,
         }
     }
 }
