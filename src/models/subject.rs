@@ -29,7 +29,7 @@ impl Course {
     }
 
     pub async fn get_one(
-        id: &String,
+        id: &str,
         db: &Pool<Postgres>,
     ) -> Result<Option<Course>, sqlx::error::Error> {
         let resp = query_as!(Course, "select * from course where coursecode=$1", id)

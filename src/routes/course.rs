@@ -51,28 +51,26 @@ auth: Option<ReqData<UserDetails>>
     let response = Course::insert_all(&data, dbpool).await;
 
     match response {
-        Ok(v) => HttpResponse::Ok().json(serde_json::json!({ "ok": v })),
+        Ok(v) => HttpResponse::Ok().json(serde_json::json!(v)),
         Err(Error::Database(err)) => HttpResponse::BadRequest()
-            .json(serde_json::json!({"ok":false,"reason":err.to_string()})),
+            .body(err.to_string()),
         Err(err) => {
             error!("Error adding subs {}", err.to_string());
-            HttpResponse::BadRequest().json(serde_json::json!({
-                "ok":false,"reason":"Error adding subjects"
-            }))
+            HttpResponse::BadRequest().body("Error adding subjects")
         }
     }
 }
 
 #[get("/{id}")]
-pub async fn get_one(id: web::Path<String>, appdata: Data<AppData>) -> ResponseResult<HttpResponse> {
+pub async fn get_one(id: web::Path<String>, appdata: Data<AppData>, auth: Option<ReqData<UserDetails>>) -> ResponseResult<web::Json<Course>> {
     let dbpool = &appdata.as_ref().pool;
+
+    // TODO: better way is to filter by user role
+    let _ = assert_role_auth(auth, None)?;
 
     let str = id.into_inner();
     log::trace!("Attempting to fetch course code {}", str);
-    let vals = Course::get_one(&str, dbpool).await?;
-    let response = match vals {
-        Some(x) => HttpResponse::Ok().json(x),
-        None => HttpResponse::NotFound().json(Value::Null),
-    };
-    Ok(response)
+    let answer = Course::get_one(&str, dbpool).await?.map(|e|web::Json(e));
+
+    answer.ok_or(ResponseErrors::NotFound)
 }
