@@ -14,8 +14,9 @@ use crate::{
 use serde_json::value::Value;
 
 #[get("all")]
-pub async fn get_all_subs(appdata: Data<AppData>) -> ResponseResult<web::Json<Vec<Course>>> {
+pub async fn get_all_subs(appdata: Data<AppData>, auth: Option<ReqData<UserDetails>>) -> ResponseResult<web::Json<Vec<Course>>> {
     let dbpool = &appdata.as_ref().pool;
+    let _ = assert_role_auth(auth, Some(UserType::Admin))?;
 
     let vals = Course::get_all(dbpool).await?;
     Ok(web::Json(vals))

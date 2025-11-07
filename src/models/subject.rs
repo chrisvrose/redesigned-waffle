@@ -1,3 +1,4 @@
+use log::debug;
 use serde::{Deserialize, Serialize};
 use sqlx::{query, query_as, PgPool, Pool, Postgres};
 
@@ -13,6 +14,7 @@ pub struct Course {
 
 impl Course {
     pub async fn get_all(db: &Pool<Postgres>) -> Result<Vec<Course>, sqlx::error::Error> {
+        debug!("Fetching all courses");
         let resp = query_as!(Course, "select * from course")
             .fetch_all(db)
             .await;

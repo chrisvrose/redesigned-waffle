@@ -8,9 +8,9 @@
 
 ### Course creation
 
-0. Admin views course list.
+0. Admin views all course list.
 1. Admin sets up course list.
-2. Admin
+2. Admin views their course list.
 
 
 ## API list
