@@ -30,7 +30,8 @@ pub fn init(service_config: &mut ServiceConfig) {
         .service(
             actix_web::web::scope("/user")
                 .service(userauth::get_all)
-                .service(userauth::add_user),
+                .service(userauth::add_user)
+                .service(userauth::get_self),
         )
         .service(actix_web::web::scope("/auth").service(auth::login))
         .service(actix_web::web::scope("/dept").service(dept::get_all))

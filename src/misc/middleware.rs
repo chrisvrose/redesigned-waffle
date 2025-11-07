@@ -15,7 +15,7 @@ use actix_web::{
     middleware::Next,
     web::{Data, ReqData},
 };
-use log::{trace, warn};
+use log::trace;
 
 /// Insert authenticator details
 pub async fn jwt_authentication(

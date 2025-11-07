@@ -1,6 +1,6 @@
 use crate::{
     dto::userauth::OutUserDTO,
-    errors::response::ResponseResult,
+    errors::response::{ResponseErrors, ResponseResult},
     misc::{
         AppData,
         auth::{UserDetails, UserType},
@@ -10,7 +10,7 @@ use crate::{
 };
 use actix_web::{
     HttpResponse, get, post,
-    web::{self, Data, ReqData},
+    web::{self, Data, Json, ReqData},
 };
 
 #[get("")]
@@ -23,6 +23,19 @@ pub async fn get_all(
     let _ = assert_role_auth(authdata, Some(UserType::Admin))?;
     let resp = UserAuth::get_all(dbpool).await?;
     Ok(web::Json(resp))
+}
+
+#[get("/me")]
+pub async fn get_self(
+    appstate: Data<AppData>,
+    authdata: Option<ReqData<UserDetails>>,
+) -> ResponseResult<Json<OutUserDTO>> {
+    let dbpool = &appstate.pool;
+    let UserDetails { uid, .. } = assert_role_auth(authdata, None)?;
+    let user = UserAuth::get_by_uid(dbpool, uid)
+        .await?
+        .ok_or(ResponseErrors::NotFound)?;
+    Ok(web::Json(user.into()))
 }
 
 #[post("")]

@@ -2,7 +2,7 @@
 
 ### Auth
 
-1. User signs up through username, password.
+1. Admin registers through username, password.
 2. User signs in using username password, gets token.
 3. User uses token for getting profile details.
 
