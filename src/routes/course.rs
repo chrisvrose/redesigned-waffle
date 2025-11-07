@@ -1,5 +1,5 @@
 use actix_web::{
-    get, post, web::{self, Data}, HttpResponse, Responder
+    HttpResponse, Responder, get, post, web::{self, Data, ReqData}
 };
 use log::error;
 use sqlx::Error;
@@ -9,15 +9,15 @@ use crate::{
     misc::{
         auth::{UserDetails, UserType}, middleware::assert_role_auth, AppData
     },
-    models::Subject,
+    models::Course,
 };
 use serde_json::value::Value;
 
 #[get("all")]
-pub async fn get_all_subs(appdata: Data<AppData>) -> ResponseResult<web::Json<Vec<Subject>>> {
+pub async fn get_all_subs(appdata: Data<AppData>) -> ResponseResult<web::Json<Vec<Course>>> {
     let dbpool = &appdata.as_ref().pool;
 
-    let vals = Subject::get_all(dbpool).await?;
+    let vals = Course::get_all(dbpool).await?;
     Ok(web::Json(vals))
 }
 
@@ -27,25 +27,27 @@ pub async fn get_all_subs(appdata: Data<AppData>) -> ResponseResult<web::Json<Ve
 pub async fn get_user_subs(
     user_details_opt: Option<web::ReqData<UserDetails>>,
     appdata: Data<AppData>,
-) -> Result<web::Json<Vec<Subject>>, ResponseErrors> {
+) -> Result<web::Json<Vec<Course>>, ResponseErrors> {
     let dbpool = &appdata.as_ref().pool;
     let UserDetails { uid, user_type } = assert_role_auth(user_details_opt, None)?;
 
     // let = user_details;
     let subjects_list_results = match user_type {
-        UserType::Student => Subject::get_for_user(&uid, dbpool).await,
-        UserType::Admin => Subject::get_all(dbpool).await,
+        UserType::Student => Course::get_for_user(&uid, dbpool).await,
+        UserType::Admin => Course::get_all(dbpool).await,
     }?;
     Ok(web::Json(subjects_list_results))
 }
 
 #[post("")]
-pub async fn add_subs(data: web::Json<Vec<Subject>>, appdata: Data<AppData>) -> impl Responder {
+pub async fn add_subs(data: web::Json<Vec<Course>>, appdata: Data<AppData>,
+auth: Option<ReqData<UserDetails>>
+) -> impl Responder {
     let dbpool = &appdata.as_ref().pool;
-
+    let _ = assert_role_auth(auth, Some(UserType::Admin));
     let data = data.into_inner();
 
-    let response = Subject::insert_all(&data, dbpool).await;
+    let response = Course::insert_all(&data, dbpool).await;
 
     match response {
         Ok(v) => HttpResponse::Ok().json(serde_json::json!({ "ok": v })),
@@ -66,7 +68,7 @@ pub async fn get_one(id: web::Path<String>, appdata: Data<AppData>) -> ResponseR
 
     let str = id.into_inner();
     log::trace!("Attempting to fetch course code {}", str);
-    let vals = Subject::get_one(&str, dbpool).await?;
+    let vals = Course::get_one(&str, dbpool).await?;
     let response = match vals {
         Some(x) => HttpResponse::Ok().json(x),
         None => HttpResponse::NotFound().json(Value::Null),

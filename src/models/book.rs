@@ -29,7 +29,7 @@ impl Booking {
     pub async fn get_all(db: &PgPool) -> Result<Vec<Booking>, sqlx::Error> {
         let ans = query_as!(
             Booking,
-            "select uid,coursecode as course_code,insert_time from book"
+            "select uid,coursecode as course_code,insert_time from booking"
         )
         .fetch_all(db)
         .await?;
@@ -38,7 +38,7 @@ impl Booking {
     pub async fn get_user(uid: i32, db: &PgPool) -> Result<Vec<Booking>, sqlx::Error> {
         let ans = query_as!(
             Booking,
-            "select uid,coursecode as course_code,insert_time from book where uid=$1",
+            "select uid,coursecode as course_code,insert_time from booking where uid=$1",
             uid
         )
         .fetch_all(db)
@@ -47,13 +47,13 @@ impl Booking {
     }
     /// make a booking for a user
     pub async fn make_booking_for_user(uid: i32, course_code: String, db: &PgPool) -> Result<(), sqlx::Error> {
-        query!("insert into book values($1,$2)", uid, course_code)
+        query!("insert into booking values($1,$2)", uid, course_code)
             .execute(db)
             .await?;
         Ok(())
     }
     pub async fn clear_user(uid: i32, course_code: String, db: &PgPool) -> Result<(), sqlx::Error> {
-        query!("delete from book where uid=$1", uid)
+        query!("delete from booking where uid=$1", uid)
             .execute(db)
             .await?;
         Ok(())

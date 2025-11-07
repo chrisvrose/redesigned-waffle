@@ -18,7 +18,7 @@ Follow the steps below in the given order.
     ```sh
     docker-compose up -d
     ```
-
+3. Please review the DB setup as the two default users are not very secure. It should be changed **immediately**.
 
 #### Compiling it (If you dont have an executable)
 

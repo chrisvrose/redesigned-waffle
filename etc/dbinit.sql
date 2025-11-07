@@ -14,7 +14,7 @@ create table if not EXISTS userauth (
     foreign key (deptid) references dept(deptid)
 );
 
-create table if not EXISTS subject (
+create table if not EXISTS course (
     coursecode char(8) primary key not null,
     name varchar(32) not null,
     semester int not null,
@@ -25,13 +25,15 @@ create table if not EXISTS subject (
     check (semester >= 0)
 );
 
-create table if not EXISTS book (
+create table if not EXISTS booking (
     uid int not null,
     coursecode char(8) not null,
     insert_time timestamp with time zone not null default now(),
+    allocated boolean default false,
     foreign key (uid) references userauth(uid),
-    foreign key (coursecode) references subject(coursecode)
+    foreign key (coursecode) references course(coursecode)
 );
+
 begin;
 
 -- default data start
@@ -42,5 +44,14 @@ values('CSE', 'Computer Science and Engineering'),
     ('ISE', 'Information Science Engineering'),
     ('PY', 'Physics');
 
+
+-- WARNING: default passwords: `password`
+insert into userauth values
+(1,'admin@localhost','Admin','$argon2id$v=19$m=19456,t=2,p=1$QUxCa3NzYWRqYnZraXNlaGJmaTN1b2gybzE$Fz7zQLKZPavq58Dx1qPHhQnyX2oufIOHtqhgnF0W/hk',
+'CSE',3,0);
+
+insert into userauth values
+(2,'student@localhost','Student','$argon2id$v=19$m=19456,t=2,p=1$QUxCa3NzYWRqYnZraXNlaGJmaTN1b2gybzE$Fz7zQLKZPavq58Dx1qPHhQnyX2oufIOHtqhgnF0W/hk',
+'CSE',3,1);
 
 commit;

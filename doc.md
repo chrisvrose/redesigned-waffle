@@ -8,6 +8,7 @@
 
 ### Course creation
 
+0. Admin views course list.
 1. Admin sets up course list.
 2. Admin
 

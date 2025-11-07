@@ -3,7 +3,7 @@ use actix_web::{get, web::ServiceConfig, Responder};
 mod auth;
 mod book;
 mod dept;
-mod subject;
+mod course;
 mod up;
 mod userauth;
 
@@ -21,11 +21,11 @@ pub fn init(service_config: &mut ServiceConfig) {
         .service(actix_web::web::scope("/up").service(up::up))
         // add the subject routes
         .service(
-            actix_web::web::scope("/subject")
-                .service(subject::get_all_subs)
-                .service(subject::get_user_subs)
-                .service(subject::get_one)
-                .service(subject::add_subs),
+            actix_web::web::scope("/course")
+                .service(course::get_all_subs)
+                .service(course::get_user_subs)
+                .service(course::get_one)
+                .service(course::add_subs),
         )
         .service(
             actix_web::web::scope("/user")

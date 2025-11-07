@@ -42,8 +42,12 @@ pub async fn get_self(
 pub async fn add_user(
     user: actix_web::web::Json<NewUserDTO>,
     appdata: Data<AppData>,
+    auth: Option<ReqData<UserDetails>>
 ) -> ResponseResult<HttpResponse> {
     let dbpool = &appdata.as_ref().pool;
+
+    let _ = assert_role_auth(auth, Some(UserType::Admin))?;
+
     let salt = &appdata.as_ref().salt_secret;
     let addedid = UserAuth::add_user(&user, dbpool, salt).await?;
     Ok(HttpResponse::Ok().json(addedid))
