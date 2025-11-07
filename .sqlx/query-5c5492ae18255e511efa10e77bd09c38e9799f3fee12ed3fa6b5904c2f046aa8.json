@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "insert into book values($1,$2)",
+  "query": "insert into booking values($1,$2)",
   "describe": {
     "columns": [],
     "parameters": {
@@ -11,5 +11,5 @@
     },
     "nullable": []
   },
-  "hash": "33721ba9c4bff2e1ee13646fa4fb9a36b99c5faa318754af6b5f3da05583dac5"
+  "hash": "5c5492ae18255e511efa10e77bd09c38e9799f3fee12ed3fa6b5904c2f046aa8"
 }

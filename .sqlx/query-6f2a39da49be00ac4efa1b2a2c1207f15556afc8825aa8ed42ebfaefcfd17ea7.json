@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "select * from subject where coursecode=$1",
+  "query": "select course.* from course,userauth where userauth.uid=$1 and userauth.semester=course.semester and ((course.isglobal and userauth.deptid!=course.deptid) or (not(course.isglobal) and userauth.deptid=course.deptid))",
   "describe": {
     "columns": [
       {
@@ -36,7 +36,7 @@
     ],
     "parameters": {
       "Left": [
-        "Bpchar"
+        "Int4"
       ]
     },
     "nullable": [
@@ -48,5 +48,5 @@
       false
     ]
   },
-  "hash": "cd4dc1e30b73a5787ae398233fd65127efbe6f1bb0b20cdb3ece2dd5bc563852"
+  "hash": "6f2a39da49be00ac4efa1b2a2c1207f15556afc8825aa8ed42ebfaefcfd17ea7"
 }

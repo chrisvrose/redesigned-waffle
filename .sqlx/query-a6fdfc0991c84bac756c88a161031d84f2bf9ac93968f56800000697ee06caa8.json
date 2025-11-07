@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "select uid,coursecode as course_code,insert_time from book",
+  "query": "select uid,coursecode as course_code,insert_time from booking",
   "describe": {
     "columns": [
       {
@@ -28,5 +28,5 @@
       false
     ]
   },
-  "hash": "600c444c3348e12c942af3548a2ed4183277e6723a0e65f98c29717d2256423c"
+  "hash": "a6fdfc0991c84bac756c88a161031d84f2bf9ac93968f56800000697ee06caa8"
 }

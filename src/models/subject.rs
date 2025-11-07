@@ -38,29 +38,6 @@ impl Course {
         resp
     }
 
-    // pub async fn insert(data: &Subject, db: &Pool<Postgres>) -> Result<u64, sqlx::error::Error> {
-    //     // start transaction
-    //     let mut tx = db.begin().await?;
-    //     // let resp = query!("Insert into course select * from ")
-
-    //     /* let resp = */
-    //     let resp = query!(
-    //         "INSERT INTO course values($1,$2,$3,$4,$5,$6)",
-    //         data.coursecode,
-    //         data.name,
-    //         data.semester,
-    //         data.isglobal,
-    //         data.deptid,
-    //         data.maxcapacity
-    //     )
-    //     .execute(&mut tx)
-    //     .await?;
-    //     // commit
-
-    //     tx.commit().await?;
-    //     return Ok(resp.rows_affected());
-    // }
-
     pub async fn insert_all(
         courses: &Vec<Course>,
         db: &Pool<Postgres>,

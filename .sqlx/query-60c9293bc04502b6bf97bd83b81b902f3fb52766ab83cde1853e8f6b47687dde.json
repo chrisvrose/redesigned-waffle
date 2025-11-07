@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "INSERT INTO subject values ($1,$2,$3,$4,$5,$6) returning coursecode",
+  "query": "INSERT INTO course values ($1,$2,$3,$4,$5,$6) returning coursecode",
   "describe": {
     "columns": [
       {
@@ -23,5 +23,5 @@
       false
     ]
   },
-  "hash": "4caab97f5bb3fcdbd48f13f3d2affbd97420626841c0d886f8ff33513e2bdd9a"
+  "hash": "60c9293bc04502b6bf97bd83b81b902f3fb52766ab83cde1853e8f6b47687dde"
 }

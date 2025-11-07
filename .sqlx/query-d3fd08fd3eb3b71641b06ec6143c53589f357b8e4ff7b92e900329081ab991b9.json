@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "delete from book where uid=$1",
+  "query": "delete from booking where uid=$1",
   "describe": {
     "columns": [],
     "parameters": {
@@ -10,5 +10,5 @@
     },
     "nullable": []
   },
-  "hash": "23e0f4d2f6e1bb3e7cfb1360b88323e9d7970be462743ca4c59f25746cf25244"
+  "hash": "d3fd08fd3eb3b71641b06ec6143c53589f357b8e4ff7b92e900329081ab991b9"
 }

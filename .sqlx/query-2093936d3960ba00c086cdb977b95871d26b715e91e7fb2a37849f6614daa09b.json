@@ -1,27 +1,27 @@
 {
   "db_name": "PostgreSQL",
-  "query": "select subject.* from subject,userauth where userauth.uid=$1 and userauth.semester=subject.semester and ((subject.isglobal and userauth.deptid!=subject.deptid) or (not(subject.isglobal) and userauth.deptid=subject.deptid))",
+  "query": "select * from userauth where uid=$1",
   "describe": {
     "columns": [
       {
         "ordinal": 0,
-        "name": "coursecode",
-        "type_info": "Bpchar"
+        "name": "uid",
+        "type_info": "Int4"
       },
       {
         "ordinal": 1,
-        "name": "name",
+        "name": "email",
         "type_info": "Varchar"
       },
       {
         "ordinal": 2,
-        "name": "semester",
-        "type_info": "Int4"
+        "name": "name",
+        "type_info": "Varchar"
       },
       {
         "ordinal": 3,
-        "name": "isglobal",
-        "type_info": "Bool"
+        "name": "pwd",
+        "type_info": "Varchar"
       },
       {
         "ordinal": 4,
@@ -30,7 +30,12 @@
       },
       {
         "ordinal": 5,
-        "name": "maxcapacity",
+        "name": "semester",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 6,
+        "name": "role",
         "type_info": "Int4"
       }
     ],
@@ -45,8 +50,9 @@
       false,
       false,
       false,
+      true,
       false
     ]
   },
-  "hash": "87280fcb5ec8879b03077264992590e185fe9e2480cfae62ab069a104127706c"
+  "hash": "2093936d3960ba00c086cdb977b95871d26b715e91e7fb2a37849f6614daa09b"
 }

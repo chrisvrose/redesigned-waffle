@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "select * from subject",
+  "query": "select * from course",
   "describe": {
     "columns": [
       {
@@ -46,5 +46,5 @@
       false
     ]
   },
-  "hash": "df9828f222d1ce39679c19d9a74a5eb21a7d0b55f14a2aa58d8ad56506b4678e"
+  "hash": "fda79ccb00ebd5689ed345ff08955937577f6cd87179ebe42b185d82239dab8d"
 }

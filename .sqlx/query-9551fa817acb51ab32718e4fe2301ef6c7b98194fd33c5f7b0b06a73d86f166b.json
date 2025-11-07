@@ -1,0 +1,52 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select * from course where coursecode=$1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "coursecode",
+        "type_info": "Bpchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "semester",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 3,
+        "name": "isglobal",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 4,
+        "name": "deptid",
+        "type_info": "Bpchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "maxcapacity",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Bpchar"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "9551fa817acb51ab32718e4fe2301ef6c7b98194fd33c5f7b0b06a73d86f166b"
+}
